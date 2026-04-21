@@ -1,252 +1,432 @@
-'=============================================================
-' Module: PAx_API_Report
-' Purpose: Call IBM Planning Analytics (TM1/PAx) REST API
-'          and populate Excel report automatically
-'=============================================================
+Here is information from the previous case with IBM – I believe Robert asked Gangadhar to try and research what was running at the times of day we were getting the critical incidents, but not sure what came of that: 
+Newest message on top, oldest on the bottom so might be helpful to start at the bottom and read upward. 
 
-Option Explicit
+Case number
+TS020838735
+In the past two weeks our memory usage has increased. I've tried restarting or production databases but memory usage increases to around 80% with a day. This is the first time I've seen memory usage increase like this. Any ideas on how to keep the memory usage down and why the sudden increase?
 
-' ---- CONFIGURATION — update these for your Assurant env ----
-Private Const PA_BASE_URL   As String = "https://<your-tm1-server>:<port>/api/v1"
-Private Const TM1_USER      As String = "your_username"
-Private Const TM1_PASS      As String = "your_password"   ' or use Windows/CAM auth
-Private Const CUBE_NAME     As String = "FixedAssets"      ' your target cube
-Private Const VIEW_NAME     As String = "Default"          ' or your named view
-Private Const OUTPUT_SHEET  As String = "Report"
-' ---------------------------------------------------------------
+•	
+o	Laura.Rakhimberdina (IBM)
+Jan 22, 2026, 13:51
+Thank you for working with us. I hope you were satisfied with the handling of this case. If you have any further questions, you can reopen this case any time in the next 30 days. If you need assistance on another issue, please open a new case with IBM.
 
-'--------------------------------------------------------------
-' MAIN ENTRY POINT — called by Power Automate Desktop
-'--------------------------------------------------------------
-Public Sub RunPAxReport()
-    On Error GoTo ErrHandler
-    
-    Dim sToken   As String
-    Dim sData    As String
-    
-    Application.ScreenUpdating = False
-    Application.Calculation = xlCalculationManual
-    
-    ' Step 1: Authenticate and get session token
-    sToken = GetPAxSessionToken()
-    If sToken = "" Then
-        MsgBox "Authentication failed. Check credentials/URL.", vbCritical
-        Exit Sub
-    End If
-    
-    ' Step 2: Fetch cube view data
-    sData = GetCubeViewData(sToken, CUBE_NAME, VIEW_NAME)
-    
-    ' Step 3: Parse JSON and write to Excel
-    If sData <> "" Then
-        ParseAndWriteData sData
-    End If
-    
-    ' Step 4: Clean up session
-    LogoutPAx sToken
-    
-    ' Step 5: Save workbook
-    ThisWorkbook.Save
-    
-    Application.Calculation = xlCalculationAutomatic
-    Application.ScreenUpdating = True
-    
-    MsgBox "PAx Report refreshed successfully: " & Now(), vbInformation
-    Exit Sub
+If you receive a survey from IBM after this case closes, please take a few minutes to respond. Your candid feedback is extremely valuable as we strive to deliver the best technical support possible and exceed your expectations.
 
-ErrHandler:
-    Application.Calculation = xlCalculationAutomatic
-    Application.ScreenUpdating = True
-    MsgBox "Error " & Err.Number & ": " & Err.Description, vbCritical
-End Sub
+Try our virtual assistant! Get quick responses to questions and receive technical guidance by clicking the blue icon in the lower right corner of the IBM Support Site. Log in for the best experience! https://www.ibm.com/mysupport
 
+Thank you for using IBM
+Show less
+o	GA
+gangadhar.akambram (Customer) changed status from Waiting for IBM to Closed by Client
+Jan 22, 2026, 09:51
+o	GA
+gangadhar.akambram (Customer)
+Jan 22, 2026, 09:51
+Hi Laura,
 
-'--------------------------------------------------------------
-' STEP 1: Authenticate — returns session token or ""
-' Uses Basic Auth (works for Native/TM1 auth mode)
-' For CAM/LDAP, swap Authorization header accordingly
-'--------------------------------------------------------------
-Private Function GetPAxSessionToken() As String
-    Dim oHttp As Object
-    Dim sUrl  As String
-    Dim sAuth As String
-    
-    Set oHttp = CreateObject("MSXML2.XMLHTTP.6.0")
-    
-    sUrl = PA_BASE_URL & "/Servers"   ' lightweight endpoint to validate auth
-    
-    ' Base64-encode credentials
-    sAuth = "Basic " & Base64Encode(TM1_USER & ":" & TM1_PASS)
-    
-    oHttp.Open "GET", sUrl, False
-    oHttp.setRequestHeader "Authorization", sAuth
-    oHttp.setRequestHeader "Content-Type", "application/json"
-    oHttp.setRequestHeader "Accept", "application/json"
-    oHttp.Send
-    
-    If oHttp.Status = 200 Then
-        ' Extract TM1SessionId from Set-Cookie header
-        Dim sCookie As String
-        sCookie = oHttp.getResponseHeader("Set-Cookie")
-        GetPAxSessionToken = ExtractSessionId(sCookie)
-    Else
-        GetPAxSessionToken = ""
-        Debug.Print "Auth failed: HTTP " & oHttp.Status & " - " & oHttp.responseText
-    End If
-    
-    Set oHttp = Nothing
-End Function
+We have reviewed the situation, and we are continuing the investigation on our side. At this time, no further assistance is required from IBM. We will open a new support case if additional help is needed.
 
+Thank you for your support.
 
-'--------------------------------------------------------------
-' STEP 2: GET cube view data as JSON string
-'--------------------------------------------------------------
-Private Function GetCubeViewData(sToken As String, sCube As String, sView As String) As String
-    Dim oHttp As Object
-    Dim sUrl  As String
-    
-    Set oHttp = CreateObject("MSXML2.XMLHTTP.6.0")
-    
-    ' PAx REST endpoint for cube view cell values
-    sUrl = PA_BASE_URL & "/Cubes('" & sCube & "')/Views('" & sView & "')/tm1.Execute?$expand=Axes($expand=Hierarchies($select=Name)),Cells($select=Value,Ordinal)"
-    
-    oHttp.Open "GET", sUrl, False
-    oHttp.setRequestHeader "Cookie", "TM1SessionId=" & sToken
-    oHttp.setRequestHeader "Accept", "application/json"
-    oHttp.Send
-    
-    If oHttp.Status = 200 Then
-        GetCubeViewData = oHttp.responseText
-    Else
-        GetCubeViewData = ""
-        Debug.Print "Data fetch failed: HTTP " & oHttp.Status
-        Debug.Print oHttp.responseText
-    End If
-    
-    Set oHttp = Nothing
-End Function
+Kind regards,
+Gangadhar.
 
+o	GA
+gangadhar.akambram (Customer) changed status from Awaiting your feedback to Waiting for IBM
+Jan 22, 2026, 09:50
+•	Jan 19, 2026
+o	LA
+Laura.Rakhimberdina (IBM)
+Jan 19, 2026, 02:30
+Hello Gangadhar,
 
-'--------------------------------------------------------------
-' STEP 3: Parse JSON response and write to Report sheet
-' Uses simple string parsing (no external JSON lib needed)
-'--------------------------------------------------------------
-Private Sub ParseAndWriteData(sJson As String)
-    Dim ws      As Worksheet
-    Dim oJson   As Object
-    Dim oCells  As Object
-    Dim oCell   As Object
-    Dim iRow    As Long
-    Dim iCol    As Long
-    Dim dVal    As Variant
-    
-    Set ws = ThisWorkbook.Worksheets(OUTPUT_SHEET)
-    ws.Cells.Clear
-    
-    ' Use ScriptControl or late-bind JScript for JSON parsing
-    ' This approach uses MSXML for XML-compatible JSON parsing
-    Set oJson = CreateObject("ScriptControl")
-    oJson.Language = "JScript"
-    
-    ' Inject a simple JSON parse helper
-    oJson.ExecuteStatement "var data = " & sJson & ";"
-    oJson.ExecuteStatement "var cells = data.Cells;"
-    oJson.ExecuteStatement "var axisRows = data.Axes[0].Hierarchies;"
-    oJson.ExecuteStatement "var axisCols = data.Axes[1].Hierarchies;"
-    
-    ' Write headers from axes
-    Dim nCols As Long
-    nCols = oJson.Eval("axisCols.length")
-    Dim nRows As Long
-    nRows = oJson.Eval("axisRows.length")
-    
-    ' Write column headers (row 1)
-    For iCol = 0 To nCols - 1
-        ws.Cells(1, iCol + 2).Value = oJson.Eval("axisCols[" & iCol & "].Name")
-        ws.Cells(1, iCol + 2).Font.Bold = True
-    Next iCol
-    
-    ' Write row headers and cell values
-    Dim nCellCount As Long
-    nCellCount = oJson.Eval("cells.length")
-    
-    Dim cellIdx As Long
-    cellIdx = 0
-    
-    For iRow = 0 To nRows - 1
-        ' Row label (column A)
-        ws.Cells(iRow + 2, 1).Value = oJson.Eval("axisRows[" & iRow & "].Name")
-        ws.Cells(iRow + 2, 1).Font.Bold = True
-        
-        ' Cell values
-        For iCol = 0 To nCols - 1
-            If cellIdx < nCellCount Then
-                dVal = oJson.Eval("cells[" & cellIdx & "].Value")
-                ws.Cells(iRow + 2, iCol + 2).Value = dVal
-                cellIdx = cellIdx + 1
-            End If
-        Next iCol
-    Next iRow
-    
-    ' Auto-fit columns
-    ws.Columns.AutoFit
-    
-    ' Timestamp
-    ws.Cells(1, 1).Value = "Last Refreshed:"
-    ws.Cells(1, 1).Font.Bold = True
-    ws.Cells(2, 1).Value = Now()
-    ws.Cells(2, 1).NumberFormat = "yyyy-mm-dd hh:mm:ss"
-    
-    Set oJson = Nothing
-    Set ws = Nothing
-End Sub
+Thank you for the update. 
+The memory increase after the chore run is noted. Please keep us informed of any new findings.
 
+Kind regards,
+Laura
+o	LA
+Laura.Rakhimberdina (IBM) changed status from Waiting for IBM to Awaiting your feedback
+Jan 19, 2026, 02:30
+o	GA
+gangadhar.akambram (Customer)
+Jan 19, 2026, 02:18
+Hello Laura,
 
-'--------------------------------------------------------------
-' STEP 4: Logout / kill session
-'--------------------------------------------------------------
-Private Sub LogoutPAx(sToken As String)
-    Dim oHttp As Object
-    Set oHttp = CreateObject("MSXML2.XMLHTTP.6.0")
-    oHttp.Open "POST", PA_BASE_URL & "/ActiveSession/tm1.Close", False
-    oHttp.setRequestHeader "Cookie", "TM1SessionId=" & sToken
-    oHttp.Send
-    Set oHttp = Nothing
-End Sub
+We are continuing to investigate the issue. Please find the latest observations below:
+•	The database has been restarted multiple times. After each restart, memory usage initially decreases but gradually increases again.
+•	TM1 server logs have been reviewed, and no errors were identified.
+•	We have observed that memory usage rises significantly after a specific chore runs.
+•	The root cause of the memory spike has not yet been determined.
+•	We are actively analyzing running processes and monitoring memory behavior to isolate the issue.
+•	Garbage memory usage has exceeded 100 GB across three environments.
+The investigation remains ongoing, and we will share further updates.
+Thank you for your understanding.
+
+Kind regards,
+Gangadhar
+Show less
+o	GA
+gangadhar.akambram (Customer) changed status from Awaiting your feedback to Waiting for IBM
+Jan 19, 2026, 02:18
+•	Jan 13, 2026
+o	LA
+Laura.Rakhimberdina (IBM)
+Jan 13, 2026, 02:08
+Hello Gangadhar,
+
+Could you please provide an update on the progress of the investigation on your side?
+Thank you!
+
+Kind regards,
+Laura
+•	Dec 23, 2025
+o	LA
+Laura.Rakhimberdina (IBM)
+Dec 23, 2025, 14:52
+Hello Gangadhar,
+
+Thank you for reply! We will keep this case open and waiting for updates.
+
+Kind regards,
+Laura
+o	LA
+Laura.Rakhimberdina (IBM) changed status from Waiting for IBM to Awaiting your feedback
+Dec 23, 2025, 14:52
+o	GA
+gangadhar.akambram (Customer)
+Dec 23, 2025, 11:49
+Hello Laura,
+
+I have reviewed the previous updates and discussed this internally with Robert. I am Currently analyzing few processes and reviewing StatsByCube and StatsByProcess where high memory usage was observed.
+
+The investigation is still in progress. I will share further updates.
+Kindly keep the case open.
+
+Thanks for understanding,
+Gangadhar.
+Show less
+o	GA
+gangadhar.akambram (Customer) changed status from Awaiting your feedback to Waiting for IBM
+Dec 23, 2025, 11:49
+o	 
+Enhanced Customer Data Repository (ECuRep)
+Dec 23, 2025, 06:07
+Automated response from: Robert Cobas <robert.cobas@assurant.com>
+________________________________________
+
+I will be out of office starting on 12/22 and returning on 1/5 . For EDM or EPA issues or questions please email EDM Scrum Team edm.scrum.team@assurant.com. For escalations please contact Josh Yopp.
+_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+This e-mail message and all attachments transmitted with it may contain legally privileged and/or confidential information intended solely for the use of the addressee(s). If the reader of this message is not the intended recipient, you are hereby
+notified that any reading, dissemination, distribution, copying, forwarding or other use of this message or its attachments is strictly prohibited. If you have received this message in error, please notify the sender immediately and delete this
+message and all copies and backups thereof. Thank you.
+Show less
+o	LA
+Laura.Rakhimberdina (IBM)
+Dec 23, 2025, 06:04
+Hello,
+
+I'd be grateful for your response on this case, otherwise, I'll proceed to mark it as the closed by the end of business day Tuesday, December 23rd, should I not hear back. You may reopen the case within 30 days if you have any additional questions.
+
+Thanks for understanding,
+Laura
+•	Dec 22, 2025
+o	 
+Enhanced Customer Data Repository (ECuRep)
+Dec 22, 2025, 02:36
+Automated response from: Robert Cobas <robert.cobas@assurant.com>
+________________________________________
+
+I will be out of office on 11/19 . For EDM or EPA issues or questions please email EDM Scrum Team edm.scrum.team@assurant.com. For escalations please contact Josh Yopp.
+_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+This e-mail message and all attachments transmitted with it may contain legally privileged and/or confidential information intended solely for the use of the addressee(s). If the reader of this message is not the intended recipient, you are hereby
+notified that any reading, dissemination, distribution, copying, forwarding or other use of this message or its attachments is strictly prohibited. If you have received this message in error, please notify the sender immediately and delete this
+message and all copies and backups thereof. Thank you.
+Show less
+o	LA
+Laura.Rakhimberdina (IBM)
+Dec 22, 2025, 02:34
+Hello Gangadhar
+
+Could you please review the previous post?
+Thank you!
+
+Kind regards,
+Laura
+•	Dec 17, 2025
+o	ZU
+Zuzanna.Chrzastek (IBM)
+Dec 17, 2025, 02:48
+Hello Gangadhar
+
+This is Zuzanna. Laura is currently on sick leave, so I’m updating the ticket.
+
+The technote you sent in your previous message relates to Planning Analytics Local, so it won’t be very helpful for troubleshooting Planning Analytics on Cloud.
+
+The Agent tab in PAW shows 92% memory usage because your entire system is using that much memory. This is expected behavior - at the moment, the Assurant GFS database is using 332 GB of RAM, and Assurant is using 131 GB of RAM.
+
+You mentioned that you reviewed the performance monitor and checked StatsByCube and StatsByServer. Did you find which cube uses that much memory?
+
+Zuzanna
+Show less
+o	ZU
+Zuzanna.Chrzastek (IBM) changed status from Waiting for IBM to Awaiting your feedback
+Dec 17, 2025, 02:48
+•	Dec 16, 2025
+o	GA
+gangadhar.akambram (Customer)
+Dec 16, 2025, 08:16
+Hello Laura, 
+
+Could you please let us know if there is any update on this case? We are waiting for your reply.
+Thank you!
+
+Kind regards,
+Gangadhar.
+o	GA
+gangadhar.akambram (Customer) changed status from IBM is working to Waiting for IBM
+Dec 16, 2025, 08:16
+•	Dec 11, 2025
+o	LA
+Laura.Rakhimberdina (IBM)
+Dec 11, 2025, 04:01
+Hello Gangadhar,
+
+Thank you for explanation!
+
+Please let us investigate this for you and I will get back with updates shortly.
+
+Kind regards,
+Laura
+o	LA
+Laura.Rakhimberdina (IBM) changed status from Waiting for IBM to IBM is working
+Dec 11, 2025, 04:01
 
 
-'--------------------------------------------------------------
-' HELPER: Extract TM1SessionId from Cookie header string
-'--------------------------------------------------------------
-Private Function ExtractSessionId(sCookie As String) As String
-    Dim parts() As String
-    Dim p       As String
-    
-    parts = Split(sCookie, ";")
-    For Each p In parts
-        p = Trim(p)
-        If Left(p, 13) = "TM1SessionId=" Then
-            ExtractSessionId = Mid(p, 14)
-            Exit Function
-        End If
-    Next p
-    ExtractSessionId = ""
-End Function
+•	
+o	gangadhar.akambram (Customer)
+Dec 10, 2025, 10:01
+Hello Laura,
+
+We are facing issue with the Agents, where the Agents health is showing as Critical, even though tm1 databases appear healthy. The memory usage temporarily reduces after troubleshooting but gradually increases again.
+
+I have followed all the trouble shooting steps provided in the IBM documentation including the points mentioned below. 
+Steps already performed:
+Restarted the databases 
+Checked StatsByCube
+Checked StatsByServer
+Verified via performance monitor
+
+Screenshot uploaded.
+IBM Documentation link: https://www.ibm.com/support/pages/how-troubleshoot-planning-analytics-administration-agent
+
+However, we are unable to locate the /file path referenced in the IBM portal so we could not complete that part of the procedure.
+
+Request your guidance on:
+1. Specific steps required to fully resolve the Agents critical status
+2. Clarifying where we can find the missing /file path in our environment 
+3. Any additional logs or configurations we should review 
+
+Kind regards,
+Gangadhar.
+Show less
+o	 
+Enhanced Customer Data Repository (ECuRep) (IBM) uploaded a file.
+Screenshot_2025-12-10_210104.png
+Dec 10, 2025, 10:01
+o	 
+Enhanced Customer Data Repository (ECuRep) (IBM) changed status from Awaiting your feedback to Waiting for IBM
+Dec 10, 2025, 10:01
+o	LA
+Laura.Rakhimberdina (IBM)
+Dec 10, 2025, 02:17
+Hello,
+
+I'd be grateful for your response on this case, otherwise, I'll proceed to mark it as the closed by the end of business day Wednesday, December 10th, should I not hear back. You may reopen the case within 30 days if you have any additional questions.
+
+Thanks for understanding,
+Laura
+•	Dec 08, 2025
+o	 
+Enhanced Customer Data Repository (ECuRep)
+Dec 08, 2025, 01:24
+Automated response from: Joshua Yopp <joshua.yopp@assurant.com>
+________________________________________
 
 
-'--------------------------------------------------------------
-' HELPER: Base64 encode string (no external dependency)
-'--------------------------------------------------------------
-Private Function Base64Encode(sInput As String) As String
-    Dim oXML  As Object
-    Dim oNode As Object
-    
-    Set oXML = CreateObject("MSXML2.DOMDocument.6.0")
-    Set oNode = oXML.createElement("b64")
-    oNode.dataType = "bin.base64"
-    oNode.nodeTypedValue = CreateObject("System.Text.ASCIIEncoding").GetBytes_4(sInput)
-    Base64Encode = Replace(oNode.Text, vbLf, "")
-    
-    Set oNode = Nothing
-    Set oXML = Nothing
-End Function
+
+I will be out of the office returning Monday December 15th. Please contact my cell phone with immediate needs.
+Thanks
+Joshua
+o	LA
+Laura.Rakhimberdina (IBM)
+Dec 08, 2025, 01:23
+Hello Roberto,
+
+May I please ask for update on this case?
+Thank you!
+
+Kind regards,
+Laura
+•	Dec 04, 2025
+o	LA
+Laura.Rakhimberdina (IBM) changed status from IBM is working to Awaiting your feedback
+Dec 04, 2025, 05:13
+o	LA
+Laura.Rakhimberdina (IBM)
+Dec 04, 2025, 01:52
+Hello Roberto,
+
+Thank you for reply!
+
+We will wait for reply.
+
+Kind regards,
+Laura
+o	LA
+Laura.Rakhimberdina (IBM) changed status from Waiting for IBM to IBM is working
+Dec 04, 2025, 01:52
+•	Dec 03, 2025
+o	RO
+robert.cobas (Customer)
+Dec 03, 2025, 08:49
+•	Have there been any recent changes to rules, feeders, TI processes, chores, or data loads? There were a few minor changes to TI processes about 3 weeks ago.
+•	Do you notice the memory rise after a specific chore or user activity? Not after anything specific, I've restarted the server which brings it down temporarily and then it goes back up.
+•	Are there any long-running threads or unusual messages when memory is high? None
+•	Is this behaviour observed only in Production or also in Test/Dev? Yes, in both.
+I'll restart the server again tonight to get a baseline. I've also turned on performance monitoring.
+
+Show less
+o	RO
+robert.cobas (Customer) changed status from Awaiting your feedback to Waiting for IBM
+Dec 03, 2025, 08:49
+o	 
+Enhanced Customer Data Repository (ECuRep)
+Dec 03, 2025, 01:36
+Automated response from: Robert Cobas <robert.cobas@assurant.com>
+________________________________________
+
+I will be out of office starting on 11/25 and returning on 12/3 . For EDM or EPA issues or questions please email EDM Scrum Team edm.scrum.team@assurant.com. For escalations please contact Josh Yopp.
+_____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+This e-mail message and all attachments transmitted with it may contain legally privileged and/or confidential information intended solely for the use of the addressee(s). If the reader of this message is not the intended recipient, you are hereby
+notified that any reading, dissemination, distribution, copying, forwarding or other use of this message or its attachments is strictly prohibited. If you have received this message in error, please notify the sender immediately and delete this
+message and all copies and backups thereof. Thank you.
+Show less
+o	LA
+Laura.Rakhimberdina (IBM)
+Dec 03, 2025, 01:34
+Hello,
+
+Please be advised the TM1 memory usage were naturally increased as users run views and TI processes. PA on Cloud do not have access to the underlying server and you cannot automate service restarts with scripts and as you aware, the only option available is the manual restart through the Administration tile in Workspace.
+
+However, there is a scheduled time where the instances are stopped/started which will release the memory back to the operating system.
+Every 3rd Saturday of the month is Maintenance weekend for PAonCloud, where all PAonCloud environments are restarted.
+Thus, all running tm1 instances on each instance are stopped and started . This is scheduled.If you have not subscribed to our PA dashboard, here is the link and please subscribe so you are informed via email of any outages, maintenance work, upgrades - https://status.ai-apps-comms.ibm.com/planninganalytics
+
+Additional information for the reference:
+Detail for troubleshooting memory issues to review and implemenr when you encounter sudden memory spikes.
+
+1)As per design, TM1 does not release memory back to the operating system.
+When a TM1 Server process grows in size (for whatever reason), the process holds on to that memory and does not release it back to the operating system. The TM1 Server will then release/garbage the memory within itself. The memory is released back only upon a restart of the tm1 instance.
+
+2)Known operations that can result in changes to the memory profile include:
+Changes to the Database/Application
+Multiple threads with the same user ID. Consider process initiated threads or concurrent TM1runti.exe usage
+Creating subsets/views
+Loading data
+Adding dimension elements
+View Zero Out
+Sandboxes - Large delta file on disk
+Idle sessions when IdleConnectionTimeOutSeconds is not set
+Dimension reordering
+Pre-calculating cubes / slices
+Feeder statements
+The majority of cases we have received related to memory consumption/differences, have turned out to be caused by changes in the model (cube data, rules, config file changes).
+
+Short of stopping and starting the instance to release the memory back to OS, if you would like to do a deep dive to determine what is consuming the most memory you can do the following:
+
+1.Turn on Performance Monitoring (right-click on the server in PAWorkspace and choose Start Performance Monitor)
+https://www.ibm.com/docs/en/planning-analytics/2.0.0?topic=cubes-enabling-performance-monitoring
+2.Open the following 2 control cubes: 
+}StatsForServer
+and
+}StatsByCubes cubes.
+NOTE: It is the }StatsForServer that provides the total memory consumption for the TM1 server by the OS
+(total of the actual current memory usage and the garbage memory.)
+
+Good document to reference when reviewing the 2 control cubes and confirm what is consuming the memory
+https://www.ibm.com/support/knowledgecenter/en/SSD29G_2.0.0/com.ibm.swg.ba.cognos.tm1_op.2.0.0.doc/c_statsstatsbycube_n706cd.html
+
+3)As well, if unsure if model changes or not and you would like to confirm and further investigate, we recommend clients start with a baseline and stop / start the server and take a snapshot of the memory upon restart to confirm memory used before users access / and changes made. As well, we recommend users reference the 2 control cubes for stats and make note.
+
+Then monitor for memory increases and reference the 2 cubes again and compare to see where the increase has occurred.
+
+Let me know if you require further information on this request.
+
+Kind regards,
+Laura
+Show less
+•	Nov 27, 2025
+o	LA
+Laura.Rakhimberdina (IBM)
+Nov 27, 2025, 01:27
+Hello,
+
+To help us investigate the sudden memory increase, could you please confirm the following:
+•	Have there been any recent changes to rules, feeders, TI processes, chores, or data loads?
+•	Do you notice the memory rise after a specific chore or user activity?
+•	Are there any long-running threads or unusual messages when memory is high?
+•	Is this behaviour observed only in Production or also in Test/Dev?
+This information will help us proceed with the analysis.
+
+Thank you!
+
+Kind regards,
+Laura
+Show less
+•	Nov 25, 2025
+o	LA
+Laura.Rakhimberdina (IBM) changed status from IBM is working to Awaiting your feedback
+Nov 25, 2025, 02:32
+o	 
+Enhanced Customer Data Repository (ECuRep)
+Nov 25, 2025, 02:25
+Automated response from: Lisa Nordling <lisa.nordling@assurant.com>
+________________________________________
+
+I am currently out of the office and will return on Monday, December 1st.
+
+If you require immediate assistance contact the my scrum team at edm.scrum.team@assurant.com.
+
+Thank you,
+Lisa Nordling
+o	LA
+Laura.Rakhimberdina (IBM)
+Nov 25, 2025, 02:25
+Hello,
+
+The investigation is still in progress.
+
+To help us investigate the sudden memory increase, could you please confirm the following:
+•	Have there been any recent changes to rules, feeders, TI processes, chores, or data loads?
+•	Do you notice the memory rise after a specific chore or user activity?
+•	Are there any long-running threads or unusual messages when memory is high?
+•	Is this behaviour observed only in Production or also in Test/Dev?
+This information will help us proceed with the analysis.
+
+Thank you!
+
+Kind regards,
+Laura
+Show less
+•	Nov 24, 2025
+o	LA
+Laura.Rakhimberdina (IBM)
+Nov 24, 2025, 07:13
+Hello
+
+Thank you for contacting IBM support. This is Laura and I will be assisting you on this case.
+Let me investigate and I will get back to you with updates.

@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>How to Raise IBM Support Ticket — PA Cloud Scheduled Restart</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --blue:       #0043CE;
+    --blue-lt:    #4589FF;
+    --blue-pale:  #EDF4FF;
+    --teal:       #007D79;
+    --teal-lt:    #9EF0F0;
+    --green:      #198038;
+    --green-lt:   #DEFBE6;
+    --red:        #DA1E28;
+    --red-lt:     #FFF1F1;
+    --yellow:     #F1C21B;
+    --yellow-lt:  #FCF4D6;
+    --purple:     #6929C4;
+    --purple-lt:  #E8DAFF;
+    --orange:     #FF832B;
+    --orange-lt:  #FFF2E8;
+    --gray-90:    #161616;
+    --gray-70:    #393939;
+    --gray-50:    #8D8D8D;
+    --gray-20:    #E0E0E0;
+    --gray-10:    #F4F4F4;
+    --sans: 'IBM Plex Sans', sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--sans); background: var(--gray-10); color: var(--gray-90); font-size: 14px; line-height: 1.6; }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #001141 0%, #0043CE 60%, #0062FF 100%);
+    color: #fff; padding: 40px 52px 36px; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content:''; position:absolute; inset:0;
+    background: repeating-linear-gradient(-45deg, transparent, transparent 38px, rgba(255,255,255,.025) 38px, rgba(255,255,255,.025) 40px);
+  }
+  .hero-badge {
+    display:inline-flex; align-items:center; gap:8px;
+    background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2);
+    border-radius:4px; padding:4px 12px; font-family:var(--mono);
+    font-size:11px; letter-spacing:.08em; text-transform:uppercase; margin-bottom:16px;
+  }
+  .hero-badge .dot { width:8px; height:8px; border-radius:50%; background:var(--yellow); }
+  .hero h1 { font-size:28px; font-weight:700; line-height:1.2; margin-bottom:8px; }
+  .hero h1 span { color:var(--yellow); }
+  .hero p  { font-size:14px; font-weight:300; opacity:.85; max-width:640px; }
+
+  /* CONTAINER */
+  .wrap { max-width:960px; margin:0 auto; padding:32px 20px 60px; }
+
+  /* PREREQ BANNER */
+  .prereq {
+    background:#fff; border-left:5px solid var(--blue);
+    border-radius:4px; padding:16px 20px; margin-bottom:28px;
+    box-shadow:0 1px 4px rgba(0,0,0,.07);
+  }
+  .prereq .label { font-family:var(--mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--blue); margin-bottom:6px; }
+  .prereq ul { list-style:none; }
+  .prereq ul li { display:flex; gap:8px; font-size:13px; padding:3px 0; }
+  .prereq ul li::before { content:'✓'; color:var(--green); font-weight:700; flex-shrink:0; }
+
+  /* STEP CARDS */
+  .steps { display:flex; flex-direction:column; gap:0; }
+  .step {
+    display:flex; gap:0; position:relative;
+  }
+  .step:not(:last-child)::after {
+    content:''; position:absolute; left:28px; top:58px; bottom:-4px;
+    width:2px; background:var(--gray-20); z-index:0;
+  }
+  .step-num {
+    flex-shrink:0; width:56px; padding-top:20px;
+    display:flex; flex-direction:column; align-items:center; z-index:1;
+  }
+  .step-circle {
+    width:36px; height:36px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:14px; font-family:var(--mono);
+    color:#fff; flex-shrink:0;
+  }
+  .step-body {
+    flex:1; background:#fff; border-radius:6px; padding:18px 20px;
+    margin-bottom:12px; box-shadow:0 1px 3px rgba(0,0,0,.07);
+  }
+  .step-body h3 { font-size:15px; font-weight:700; margin-bottom:4px; }
+  .step-body .step-sub { font-size:12px; font-family:var(--mono); color:var(--gray-50); margin-bottom:12px; }
+
+  /* field block */
+  .field-block { margin-bottom:14px; }
+  .field-label {
+    display:block; font-size:11px; font-weight:600; letter-spacing:.07em;
+    text-transform:uppercase; font-family:var(--mono); margin-bottom:4px;
+  }
+  .field-value {
+    background:var(--gray-10); border:1px solid var(--gray-20);
+    border-radius:4px; padding:10px 14px; font-size:13px;
+    line-height:1.5;
+  }
+  .field-value.mono { font-family:var(--mono); font-size:12px; }
+  .field-value.highlight { background:var(--blue-pale); border-color:var(--blue-lt); }
+  .field-value.green-bg { background:var(--green-lt); border-color:var(--green); }
+  .field-value.yellow-bg { background:var(--yellow-lt); border-color:var(--yellow); }
+
+  /* severity table */
+  .sev-table { width:100%; border-collapse:collapse; margin-top:8px; font-size:13px; }
+  .sev-table th { background:var(--gray-90); color:#fff; padding:8px 12px; text-align:left; font-size:11px; font-family:var(--mono); letter-spacing:.05em; }
+  .sev-table td { padding:9px 12px; border-bottom:1px solid var(--gray-20); vertical-align:top; }
+  .sev-table tr:last-child td { border-bottom:none; }
+  .sev-1 { background:var(--red-lt); }
+  .sev-2 { background:var(--orange-lt); }
+  .sev-3 { background:var(--yellow-lt); }
+  .sev-4 { background:var(--green-lt); }
+  .sev-badge { display:inline-block; padding:2px 8px; border-radius:3px; font-weight:700; font-family:var(--mono); font-size:11px; }
+  .s1 { background:var(--red);    color:#fff; }
+  .s2 { background:var(--orange); color:#fff; }
+  .s3 { background:var(--yellow); color:var(--gray-90); }
+  .s4 { background:var(--green);  color:#fff; }
+  .sev-recommend { font-size:11px; font-weight:600; color:var(--green); }
+
+  /* ticket body */
+  .ticket-body {
+    background:#FAFCFF; border:1px solid var(--blue-lt);
+    border-radius:6px; padding:20px 22px; font-size:13px;
+    line-height:1.75; white-space:pre-wrap; font-family:var(--sans);
+    position:relative;
+  }
+  .ticket-body .tkt-label {
+    position:absolute; top:-11px; left:14px;
+    background:var(--blue); color:#fff; font-family:var(--mono);
+    font-size:10px; letter-spacing:.08em; padding:2px 10px; border-radius:3px;
+    text-transform:uppercase;
+  }
+  .ticket-body strong { color:var(--blue); }
+
+  /* tips */
+  .tip {
+    display:flex; gap:10px; align-items:flex-start;
+    background:var(--blue-pale); border-radius:4px;
+    padding:10px 14px; margin-top:10px; font-size:12.5px;
+    color:var(--gray-70);
+  }
+  .tip::before { content:'💡'; flex-shrink:0; }
+
+  /* what-next */
+  .what-next {
+    background:#fff; border-radius:6px; padding:20px;
+    box-shadow:0 1px 3px rgba(0,0,0,.07); margin-top:28px;
+  }
+  .what-next h3 { font-size:15px; font-weight:700; margin-bottom:14px; color:var(--blue); }
+  .timeline { display:flex; flex-direction:column; gap:0; }
+  .tl-item { display:flex; gap:16px; position:relative; }
+  .tl-item:not(:last-child)::before {
+    content:''; position:absolute; left:15px; top:30px; bottom:-4px;
+    width:2px; background:var(--gray-20);
+  }
+  .tl-dot { width:30px; height:30px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:13px; z-index:1; }
+  .tl-content { padding-bottom:16px; }
+  .tl-content strong { font-size:13px; display:block; }
+  .tl-content span { font-size:12px; color:var(--gray-50); }
+
+  /* ref box */
+  .ref-box {
+    margin-top:28px; background:#fff; border-radius:6px;
+    padding:18px 20px; box-shadow:0 1px 3px rgba(0,0,0,.07);
+  }
+  .ref-box h3 { font-size:13px; font-weight:700; margin-bottom:12px; color:var(--gray-70); font-family:var(--mono); text-transform:uppercase; letter-spacing:.06em; }
+  .ref-box a { color:var(--blue); font-size:13px; text-decoration:none; display:block; padding:4px 0; border-bottom:1px solid var(--gray-10); }
+  .ref-box a:hover { text-decoration:underline; }
+  .ref-box a:last-child { border-bottom:none; }
+
+  /* footer */
+  .footer { margin-top:40px; padding-top:16px; border-top:1px solid var(--gray-20); font-size:12px; color:var(--gray-50); font-family:var(--mono); display:flex; justify-content:space-between; }
+
+  /* colors for steps */
+  .c1 { background:var(--blue); }
+  .c2 { background:var(--teal); }
+  .c3 { background:var(--purple); }
+  .c4 { background:var(--green); }
+  .c5 { background:var(--orange); }
+  .c6 { background:var(--gray-70); }
+
+  @media(max-width:640px){
+    .hero { padding:28px 20px 24px; }
+    .hero h1 { font-size:20px; }
+    .step-num { width:40px; }
+    .ticket-body { font-size:12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge"><span class="dot"></span>IBM mysupport.ibm.com · Planning Analytics Cloud</div>
+  <h1>How to Raise an IBM Support Ticket<br/><span>Requesting Scheduled Weekly Restart — PA Cloud</span></h1>
+  <p>Step-by-step guide to opening a Severity 4 service request asking IBM Cloud Ops to configure a recurring weekly TM1 instance restart.</p>
+</div>
+
+<div class="wrap">
+
+  <!-- PRE-REQUISITES -->
+  <div class="prereq">
+    <div class="label">Before You Start — What You Need</div>
+    <ul>
+      <li>IBM ID registered at <strong>ibm.com/mysupport</strong> (same email linked to your PA Cloud contract)</li>
+      <li>IBM Customer Number (ICN) — from your purchase confirmation or your site administrator</li>
+      <li>Your PA Cloud <strong>database / instance name</strong> (e.g. <code>Assurant_EPA_PRD</code>)</li>
+      <li>Your PA Cloud <strong>tenant/environment URL</strong> (e.g. <code>*.planning-analytics.saas.ibm.com</code>)</li>
+      <li>Preferred restart time in <strong>UTC</strong> (e.g. Sunday 08:00 UTC = Sunday 04:00 ET)</li>
+      <li>Approval from your internal Change Advisory Board (CAB) / manager before submitting</li>
+    </ul>
+  </div>
+
+  <!-- STEPS -->
+  <div class="steps">
+
+    <!-- STEP 1 -->
+    <div class="step">
+      <div class="step-num"><div class="step-circle c1">1</div></div>
+      <div class="step-body">
+        <h3>Navigate to IBM Support Portal</h3>
+        <div class="step-sub">URL → https://www.ibm.com/mysupport</div>
+        <div class="field-block">
+          <span class="field-label">Action</span>
+          <div class="field-value">Go to <strong>mysupport.ibm.com</strong> and click <strong>"Open a case"</strong> (top navigation or dashboard tile). Sign in with your IBM ID. If first time, click <em>"Register"</em> and link your IBM Customer Number (ICN).</div>
+        </div>
+        <div class="tip">If you get "Access Denied", your IBM ID may not yet be linked to the PA Cloud contract. Ask your IBM site administrator to grant you access before raising a ticket.</div>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step">
+      <div class="step-num"><div class="step-circle c2">2</div></div>
+      <div class="step-body">
+        <h3>Fill in the Case Header</h3>
+        <div class="step-sub">Type of Support + Product Selection</div>
+
+        <div class="field-block">
+          <span class="field-label">Type of Support</span>
+          <div class="field-value highlight">Product Support</div>
+        </div>
+        <div class="field-block">
+          <span class="field-label">Product</span>
+          <div class="field-value highlight">IBM Planning Analytics <em>(search for "Planning Analytics" and select)</em></div>
+        </div>
+        <div class="field-block">
+          <span class="field-label">Product Version</span>
+          <div class="field-value">2.0.x / 2.1.x — select the version shown in your PAW Administration panel, or leave as "All Versions" if unsure</div>
+        </div>
+        <div class="field-block">
+          <span class="field-label">Operating System</span>
+          <div class="field-value">Platform Independent (SaaS/Cloud)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3 — SEVERITY -->
+    <div class="step">
+      <div class="step-num"><div class="step-circle c3">3</div></div>
+      <div class="step-body">
+        <h3>Select the Correct Severity Level</h3>
+        <div class="step-sub">IBM Enterprise Support — 4 severity levels</div>
+
+        <table class="sev-table">
+          <thead><tr><th>Level</th><th>IBM Definition</th><th>Use When</th></tr></thead>
+          <tbody>
+            <tr class="sev-1"><td><span class="sev-badge s1">SEV 1</span></td><td><strong>Critical — System Down.</strong> Production is completely unavailable. 24×7 engagement required.</td><td>EPA instance unreachable for all users right now</td></tr>
+            <tr class="sev-2"><td><span class="sev-badge s2">SEV 2</span></td><td><strong>Significant.</strong> Severely restricted functionality or jeopardising a business deadline.</td><td>Critical feature broken (e.g. all TI chores failing)</td></tr>
+            <tr class="sev-3"><td><span class="sev-badge s3">SEV 3</span></td><td><strong>Some impact.</strong> System usable; issue does not significantly affect operations.</td><td>Non-critical bug or configuration question</td></tr>
+            <tr class="sev-4" style="border:2px solid var(--green)"><td><span class="sev-badge s4">SEV 4</span> <span class="sev-recommend">← USE THIS</span></td><td><strong>Minimal — Inquiry / Non-technical request.</strong></td><td><strong>Scheduling a recurring restart = enhancement/configuration request. System is currently running fine.</strong></td></tr>
+          </tbody>
+        </table>
+        <div class="tip">IBM explicitly says: Severity 4 = "An inquiry or non-technical request." A scheduled restart configuration is a proactive operational request — not an outage. Using SEV 1 or SEV 2 incorrectly can result in IBM downgrading your case and delaying response.</div>
+      </div>
+    </div>
+
+    <!-- STEP 4 — TITLE -->
+    <div class="step">
+      <div class="step-num"><div class="step-circle c4">4</div></div>
+      <div class="step-body">
+        <h3>Write the Case Title</h3>
+        <div class="step-sub">Keep it specific — IBM triages on title keywords</div>
+        <div class="field-block">
+          <span class="field-label">Recommended Title</span>
+          <div class="field-value highlight mono">[PA Cloud] Request: Configure Recurring Weekly Automatic TM1 Instance Restart for Memory Management — [Your Database Name]</div>
+        </div>
+        <div class="tip">Include your database name and "PA Cloud" in the title. IBM Cloud Ops teams are separate from on-prem support — this helps route directly to the right team.</div>
+      </div>
+    </div>
+
+    <!-- STEP 5 — BODY -->
+    <div class="step">
+      <div class="step-num"><div class="step-circle c5">5</div></div>
+      <div class="step-body">
+        <h3>Write the Case Description</h3>
+        <div class="step-sub">Copy, fill in the bracketed fields, and paste into the IBM support form</div>
+
+        <div class="ticket-body">
+          <div class="tkt-label">CASE DESCRIPTION — COPY &amp; PASTE</div>
+<strong>Subject:</strong> Request to Configure Recurring Weekly Automatic TM1 Instance Restart — IBM Planning Analytics Cloud
+
+<strong>Dear IBM Planning Analytics Cloud Support Team,</strong>
+
+We are writing to request that IBM Cloud Operations configure a <strong>recurring weekly automatic restart</strong> of our TM1 server instance on IBM Planning Analytics Cloud (SaaS).
+
+─────────────────────────────────────────
+<strong>ENVIRONMENT DETAILS</strong>
+─────────────────────────────────────────
+• Customer Name       : Assurant Inc.
+• IBM Customer Number : [INSERT ICN]
+• PA Cloud Tenant URL : [INSERT e.g. https://xyz.planning-analytics.saas.ibm.com]
+• Database / Instance : [INSERT e.g. Assurant_EPA_PRD]
+• PA Version          : [INSERT e.g. 2.0.9 / 2.1.x]
+• Environment Type    : Production (IBM Planning Analytics Cloud — SaaS)
+
+─────────────────────────────────────────
+<strong>BUSINESS JUSTIFICATION</strong>
+─────────────────────────────────────────
+TM1's in-memory architecture does not release memory back to the operating system during runtime. Over a 7-day usage cycle, we observe progressive accumulation from:
+  • Stargate / calculation view cache garbage
+  • Abandoned sandbox accumulation
+  • Zombie REST/PAX session threads
+  • MUN lookup pre-computation bloat (PA 2.0.5+)
+  • TurboIntegrator transient memory
+
+This results in degraded view open times, longer TI process runtimes, and occasional lock contention toward the end of each week. A weekly restart fully reclaims this memory and resets the platform to a stable baseline.
+
+We understand from the IBM Community (confirmed by IBM Offering Management — Stuart King) and customer precedent on TM1 Forum that IBM Cloud Operations can configure a Windows Scheduled Task on the backend VM to achieve this.
+
+Reference: https://community.ibm.com/community/user/businessanalytics/discussion/automated-restart-of-cloud-pa-server-instance
+
+─────────────────────────────────────────
+<strong>REQUESTED CONFIGURATION</strong>
+─────────────────────────────────────────
+• Restart Cadence     : Weekly (every Sunday)
+• Preferred Time (UTC): 08:00 UTC (= 04:00 US Eastern / 03:00 US Central)
+• Action Sequence     : Clean Stop → Wait for full shutdown → Start
+• Database Scope      : Production instance only (details above)
+• Blackout Exception  : Please skip on IBM's own 3rd-Saturday monthly
+                        maintenance week (to avoid double-restart)
+
+─────────────────────────────────────────
+<strong>SPECIFIC QUESTIONS FOR IBM</strong>
+─────────────────────────────────────────
+1. Can IBM Cloud Operations configure this recurring restart as described?
+2. What is the exact restart sequence IBM will use (SaveDataAll before stop?)?
+3. Will we receive advance notification before each scheduled restart?
+4. Is there a mechanism to temporarily suppress a specific week's restart
+   (e.g., during month-end close) without raising a new ticket each time?
+5. What monitoring / alerting does IBM apply to confirm successful restart
+   and notify us if the restart fails or the instance does not come back up?
+
+─────────────────────────────────────────
+<strong>NOTES</strong>
+─────────────────────────────────────────
+• This is a proactive configuration request — the system is currently running normally.
+• We have confirmed via APAR PH19984 guidance that our tenant should be on
+  PA 2.0.9+ before scheduling restarts (please confirm our current version).
+• We will subscribe to the PA Cloud status page for maintenance coordination:
+  https://status.ai-apps-comms.ibm.com/planninganalytics
+
+We appreciate IBM's support in enabling this configuration.
+
+<strong>Regards,
+Niranjan Patra
+Senior TM1 / IBM Planning Analytics Consultant
+Tech Mahindra — Assurant EPA Engagement
+[Your contact email] | [Your phone]</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 6 — ATTACHMENTS -->
+    <div class="step">
+      <div class="step-num"><div class="step-circle c6">6</div></div>
+      <div class="step-body">
+        <h3>Attach Supporting Documents</h3>
+        <div class="step-sub">Optional but strongly recommended — speeds up IBM triage</div>
+
+        <div class="field-block">
+          <span class="field-label">Recommended Attachments</span>
+          <div class="field-value">
+            <strong>1. PAW Admin screenshot</strong> showing current memory usage trend (if available)<br/>
+            <strong>2. This SPIKE research document</strong> (SPIKE_3981779_AutoRestart_EPA.html) — demonstrates due diligence<br/>
+            <strong>3. Internal approval email</strong> from your manager / CAB confirming the request is authorized<br/>
+            <strong>4. Your business calendar blackout windows</strong> (month-end, quarter-end dates) so IBM can factor them into the schedule
+          </div>
+        </div>
+        <div class="tip">IBM support agents respond faster when they can see you've already done the research. Attaching the SPIKE doc shows this is a well-considered operational request, not a vague "can you restart my server" ask.</div>
+      </div>
+    </div>
+
+  </div><!-- /steps -->
+
+  <!-- WHAT HAPPENS NEXT -->
+  <div class="what-next">
+    <h3>🕐 What Happens After You Submit</h3>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--blue);color:#fff">📨</div>
+        <div class="tl-content">
+          <strong>Immediate — IBM auto-acknowledgement email</strong>
+          <span>You receive a case number (e.g. TS012345678). Save this — use it in all follow-up communications.</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--teal);color:#fff">👤</div>
+        <div class="tl-content">
+          <strong>Within 2 business days — IBM Support Engineer assigned (SEV 4)</strong>
+          <span>They may ask clarifying questions about your environment. Respond promptly to avoid case going stale.</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--purple);color:#fff">🔧</div>
+        <div class="tl-content">
+          <strong>IBM routes to Cloud Ops team</strong>
+          <span>Support escalates to the IBM Cloud Operations team who manage the backend VMs. They review your requested cadence and time.</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--orange);color:#fff">📅</div>
+        <div class="tl-content">
+          <strong>IBM confirms schedule &amp; tests first restart</strong>
+          <span>IBM will notify you of the first scheduled restart date and confirm the configuration. Verify your post-restart health probe fires correctly.</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot" style="background:var(--green);color:#fff">✅</div>
+        <div class="tl-content">
+          <strong>Close the ticket + raise ServiceNow Standard Change</strong>
+          <span>Once IBM confirms the schedule is live, register it as a pre-approved Standard Change in Assurant's ServiceNow for SOX ITGC compliance.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIPS TABLE -->
+  <div style="background:#fff;border-radius:6px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.07);margin-top:20px;">
+    <h3 style="font-size:15px;font-weight:700;margin-bottom:14px;color:var(--red)">⚠️ Common Mistakes to Avoid</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+      <thead><tr style="background:var(--gray-90);color:#fff;">
+        <th style="padding:8px 12px;text-align:left;font-family:var(--mono);font-size:11px;">Mistake</th>
+        <th style="padding:8px 12px;text-align:left;font-family:var(--mono);font-size:11px;">Why It's a Problem</th>
+        <th style="padding:8px 12px;text-align:left;font-family:var(--mono);font-size:11px;">Do This Instead</th>
+      </tr></thead>
+      <tbody>
+        <tr style="border-bottom:1px solid var(--gray-20);">
+          <td style="padding:9px 12px;background:var(--red-lt);">Raising as SEV 1 or SEV 2</td>
+          <td style="padding:9px 12px;">IBM will downgrade immediately; delays assignment</td>
+          <td style="padding:9px 12px;">Always SEV 4 for proactive config requests</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--gray-20);">
+          <td style="padding:9px 12px;background:var(--yellow-lt);">Vague title like "restart help"</td>
+          <td style="padding:9px 12px;">Routes to wrong team; slower triage</td>
+          <td style="padding:9px 12px;">Include "[PA Cloud]", database name, and "recurring restart" in the title</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--gray-20);">
+          <td style="padding:9px 12px;background:var(--yellow-lt);">Not specifying time in UTC</td>
+          <td style="padding:9px 12px;">IBM Cloud Ops works in UTC; ET time causes confusion</td>
+          <td style="padding:9px 12px;">Always state UTC time. Add local time equivalent in brackets.</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--gray-20);">
+          <td style="padding:9px 12px;background:var(--yellow-lt);">Forgetting blackout windows</td>
+          <td style="padding:9px 12px;">IBM may schedule restart during month-end close</td>
+          <td style="padding:9px 12px;">List all critical business blackout dates in the ticket</td>
+        </tr>
+        <tr>
+          <td style="padding:9px 12px;background:var(--orange-lt);">No internal approval before submitting</td>
+          <td style="padding:9px 12px;">SOX audit risk; change not in ServiceNow</td>
+          <td style="padding:9px 12px;">Get manager + CAB pre-approval; attach email to ticket</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- REFERENCE LINKS -->
+  <div class="ref-box">
+    <h3>🔗 Key Reference Links</h3>
+    <a href="https://www.ibm.com/mysupport" target="_blank">→ IBM Support Portal — mysupport.ibm.com (Open a Case)</a>
+    <a href="https://www.ibm.com/support/pages/ibm-enterprise-support-severity-definitions" target="_blank">→ IBM Enterprise Support Severity Definitions (SEV 1–4)</a>
+    <a href="https://www.ibm.com/products/planning-analytics/support" target="_blank">→ IBM Planning Analytics Support Page</a>
+    <a href="https://community.ibm.com/community/user/businessanalytics/discussion/automated-restart-of-cloud-pa-server-instance" target="_blank">→ IBM Community — Automated Restart of Cloud PA Server Instance (IBM Offering Manager confirmation)</a>
+    <a href="https://www.tm1forum.com/viewtopic.php?t=16188" target="_blank">→ TM1 Forum #16188 — Automated Server Restart IBM Cloud (working customer precedent)</a>
+    <a href="https://status.ai-apps-comms.ibm.com/planninganalytics" target="_blank">→ IBM PA Cloud Status Page (subscribe for maintenance notifications)</a>
+    <a href="https://ibm-data-and-ai.ideas.ibm.com/ideas/PAOC-I-471" target="_blank">→ IBM Ideas PAOC-I-471 — Customer-facing scheduled restart API request (upvote!)</a>
+    <a href="https://www.ibm.com/support/pages/working-ibm-ba-support-severity-1-expectations-cognos-analytics-and-planning-analytics" target="_blank">→ IBM — Working with IBM BA Support: Severity Expectations for Planning Analytics</a>
+  </div>
+
+  <div class="footer">
+    <span>IBM Support Ticket Guide · PA Cloud Weekly Restart · Assurant EPA</span>
+    <span>Niranjan Patra · April 2026</span>
+  </div>
+
+</div><!-- /wrap -->
+</body>
+</html>

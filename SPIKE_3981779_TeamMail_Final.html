@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SPIKE #3981779 — Final Findings | Niranjan Patra</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --ink:       #0A0F1E;
+    --ink-soft:  #3D4466;
+    --ink-muted: #8892B0;
+    --blue:      #1A6BFF;
+    --blue-glow: rgba(26,107,255,.18);
+    --teal:      #00C8B4;
+    --teal-glow: rgba(0,200,180,.15);
+    --red:       #FF3B5C;
+    --red-glow:  rgba(255,59,92,.12);
+    --gold:      #FFB800;
+    --gold-glow: rgba(255,184,0,.15);
+    --green:     #00C47A;
+    --green-glow:rgba(0,196,122,.13);
+    --surface:   #F0F4FF;
+    --white:     #FFFFFF;
+    --border:    rgba(26,107,255,.12);
+    --sans: 'DM Sans', sans-serif;
+    --display: 'Syne', sans-serif;
+    --mono: 'DM Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  /* ── WRAPPER ───────────────────────────────────────── */
+  .email-wrap {
+    max-width: 700px;
+    margin: 32px auto;
+    background: var(--white);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 48px rgba(10,15,30,.12), 0 1px 3px rgba(10,15,30,.06);
+  }
+
+  /* ── HEADER ────────────────────────────────────────── */
+  .header {
+    background: var(--ink);
+    padding: 40px 48px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 80% at 90% 20%, rgba(26,107,255,.25) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 10% 80%, rgba(0,200,180,.15) 0%, transparent 55%);
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--blue), var(--teal), transparent);
+  }
+
+  .badge-row {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 20px; position: relative; z-index: 1;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 12px; border-radius: 20px;
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: .06em; font-weight: 500;
+  }
+  .badge-blue { background: rgba(26,107,255,.2); color: #7AADFF; border: 1px solid rgba(26,107,255,.3); }
+  .badge-teal { background: rgba(0,200,180,.15); color: #00C8B4; border: 1px solid rgba(0,200,180,.25); }
+  .badge-pulse {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--teal);
+    box-shadow: 0 0 0 3px rgba(0,200,180,.2);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(0,200,180,.2); }
+    50%       { box-shadow: 0 0 0 6px rgba(0,200,180,.05); }
+  }
+
+  .header h1 {
+    font-family: var(--display);
+    font-size: 26px; font-weight: 800;
+    color: var(--white);
+    line-height: 1.2;
+    letter-spacing: -.5px;
+    position: relative; z-index: 1;
+    margin-bottom: 6px;
+  }
+  .header h1 span { color: var(--teal); }
+  .header-sub {
+    font-size: 13px; color: rgba(255,255,255,.5);
+    font-weight: 300; position: relative; z-index: 1;
+    margin-bottom: 28px;
+  }
+
+  .meta-strip {
+    display: flex; gap: 24px; flex-wrap: wrap;
+    position: relative; z-index: 1;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,.07);
+  }
+  .meta-item { display: flex; flex-direction: column; gap: 2px; }
+  .meta-item label {
+    font-family: var(--mono); font-size: 9px;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: rgba(255,255,255,.35);
+  }
+  .meta-item span { font-size: 12px; font-weight: 500; color: rgba(255,255,255,.8); }
+
+  /* ── BODY ──────────────────────────────────────────── */
+  .body { padding: 40px 48px; }
+
+  .greeting {
+    font-size: 15px; font-weight: 500; color: var(--ink);
+    margin-bottom: 12px;
+  }
+  .intro {
+    font-size: 14px; color: var(--ink-soft);
+    margin-bottom: 36px; line-height: 1.75;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── SECTION LABEL ─────────────────────────────────── */
+  .section-label {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 14px;
+  }
+  .section-label .line {
+    flex: 1; height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+  }
+  .section-label span {
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--blue); font-weight: 500;
+    white-space: nowrap;
+  }
+
+  /* ── OBJECTIVE CARD ────────────────────────────────── */
+  .objective-card {
+    background: linear-gradient(135deg, #EFF4FF 0%, #F4FBFA 100%);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--blue);
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 32px;
+    font-size: 13.5px; line-height: 1.7;
+    color: var(--ink-soft);
+  }
+
+  /* ── IBM RESPONSE CARDS ────────────────────────────── */
+  .ibm-block { margin-bottom: 32px; }
+  .ibm-header {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--ink); border-radius: 10px 10px 0 0;
+    padding: 14px 20px;
+  }
+  .ibm-logo {
+    font-family: var(--display); font-size: 13px; font-weight: 800;
+    color: var(--white); letter-spacing: .5px;
+  }
+  .ibm-title {
+    font-size: 12px; color: rgba(255,255,255,.6);
+    font-family: var(--mono); letter-spacing: .04em;
+  }
+  .ibm-date {
+    margin-left: auto; font-family: var(--mono); font-size: 10px;
+    color: rgba(255,255,255,.35); letter-spacing: .05em;
+  }
+
+  .ibm-responses {
+    border: 1px solid var(--border);
+    border-top: none; border-radius: 0 0 10px 10px;
+    overflow: hidden;
+  }
+  .ibm-response-item {
+    display: flex; gap: 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .ibm-response-item:last-child { border-bottom: none; }
+
+  .ibm-status {
+    min-width: 56px; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 18px 14px;
+    font-family: var(--mono); font-size: 18px;
+    font-weight: 700;
+  }
+  .ibm-status small {
+    font-size: 9px; letter-spacing: .08em; text-transform: uppercase;
+    margin-top: 4px; font-weight: 500;
+  }
+
+  .status-no  { background: var(--red-glow);   color: var(--red); }
+  .status-no small { color: var(--red); opacity: .7; }
+  .status-yes { background: var(--green-glow);  color: var(--green); }
+  .status-yes small { color: var(--green); opacity: .7; }
+
+  .ibm-text { padding: 18px 20px; flex: 1; }
+  .ibm-text strong { font-size: 13px; font-weight: 600; display: block; margin-bottom: 4px; }
+  .ibm-text p { font-size: 12.5px; color: var(--ink-soft); line-height: 1.6; }
+
+  /* ── HIGHLIGHT FINDING ─────────────────────────────── */
+  .highlight-finding {
+    background: linear-gradient(135deg, #001A00 0%, #003320 100%);
+    border-radius: 12px; padding: 22px 24px;
+    margin-bottom: 32px; position: relative; overflow: hidden;
+  }
+  .highlight-finding::before {
+    content: '★';
+    position: absolute; right: 20px; top: 12px;
+    font-size: 60px; opacity: .05; color: var(--gold);
+    font-family: var(--display);
+  }
+  .highlight-finding .hf-label {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 8px;
+  }
+  .highlight-finding p {
+    font-size: 14px; color: rgba(255,255,255,.85);
+    line-height: 1.7; font-weight: 300;
+  }
+  .highlight-finding strong { color: var(--gold); font-weight: 600; }
+
+  /* ── CONCLUSION BOX ────────────────────────────────── */
+  .conclusion {
+    background: var(--ink); border-radius: 12px;
+    padding: 24px 26px; margin-bottom: 32px;
+    position: relative; overflow: hidden;
+  }
+  .conclusion::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--blue), var(--teal));
+  }
+  .conclusion .c-label {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--teal); margin-bottom: 10px;
+  }
+  .conclusion p {
+    font-size: 14px; color: rgba(255,255,255,.8);
+    line-height: 1.75; font-weight: 300;
+  }
+  .conclusion strong { color: var(--white); font-weight: 600; }
+
+  /* ── NEXT STEPS ────────────────────────────────────── */
+  .next-steps { margin-bottom: 32px; }
+  .step-item {
+    display: flex; gap: 16px; align-items: flex-start;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .step-item:last-child { border-bottom: none; }
+  .step-num {
+    width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+    background: var(--ink); color: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 11px; font-weight: 500;
+    margin-top: 1px;
+  }
+  .step-content strong {
+    display: block; font-size: 13px; font-weight: 600;
+    color: var(--ink); margin-bottom: 2px;
+  }
+  .step-content span { font-size: 12.5px; color: var(--ink-muted); }
+  .step-tag {
+    display: inline-block; margin-top: 5px;
+    padding: 2px 8px; border-radius: 4px;
+    font-family: var(--mono); font-size: 10px; font-weight: 500;
+    letter-spacing: .04em;
+  }
+  .tag-now      { background: #E8F5E9; color: var(--green); }
+  .tag-ongoing  { background: #EFF4FF; color: var(--blue); }
+  .tag-ifneeded { background: #FFF8E0; color: #B88A00; }
+  .tag-future   { background: #FFF0F3; color: var(--red); }
+
+  /* ── DIVIDER ───────────────────────────────────────── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 32px 0;
+  }
+
+  /* ── SIGN-OFF ──────────────────────────────────────── */
+  .signoff { padding-top: 4px; }
+  .signoff p { font-size: 13.5px; color: var(--ink-soft); margin-bottom: 20px; }
+  .sig-card {
+    display: flex; gap: 16px; align-items: center;
+    background: var(--surface); border-radius: 10px;
+    padding: 16px 20px;
+  }
+  .sig-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue), var(--teal));
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--display); font-size: 16px; font-weight: 800;
+    color: #fff; flex-shrink: 0;
+  }
+  .sig-info strong { display: block; font-size: 14px; font-weight: 600; }
+  .sig-info span   { font-size: 12px; color: var(--ink-muted); }
+
+  /* ── FOOTER BAR ────────────────────────────────────── */
+  .footer {
+    background: var(--ink);
+    padding: 16px 48px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 8px;
+  }
+  .footer span { font-family: var(--mono); font-size: 10px; color: rgba(255,255,255,.25); letter-spacing: .06em; }
+  .footer .dot { color: var(--teal); }
+
+  @media(max-width:600px){
+    .header, .body { padding: 28px 24px; }
+    .footer { padding: 16px 24px; }
+    .meta-strip { gap: 16px; }
+    .header h1 { font-size: 20px; }
+    .ibm-status { min-width: 44px; font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="email-wrap">
+
+  <!-- ══ HEADER ══════════════════════════════════════════ -->
+  <div class="header">
+    <div class="badge-row">
+      <span class="badge badge-blue">ADO PBI #3981779</span>
+      <span class="badge badge-teal"><span class="badge-pulse"></span>Research Complete</span>
+    </div>
+    <h1>EPA System Auto Restart<br/><span>SPIKE — Final Findings & Conclusion</span></h1>
+    <p class="header-sub">IBM Planning Analytics Cloud · GT.GFS-Program · Sprint 9 2026</p>
+    <div class="meta-strip">
+      <div class="meta-item"><label>From</label><span>Niranjan Patra</span></div>
+      <div class="meta-item"><label>To</label><span>EPA Team</span></div>
+      <div class="meta-item"><label>Date</label><span>April 23, 2026</span></div>
+      <div class="meta-item"><label>IBM Case</label><span>Severity 4 · Closed</span></div>
+      <div class="meta-item"><label>Status</label><span>SPIKE Complete ✓</span></div>
+    </div>
+  </div>
+
+  <!-- ══ BODY ════════════════════════════════════════════ -->
+  <div class="body">
+
+    <p class="greeting">Hi Team,</p>
+    <p class="intro">
+      I have completed the research for <strong>SPIKE PBI #3981779 — "EPA: Research SPIKE – Job for System Auto Restart."</strong>
+      As part of this investigation, I evaluated 12 automation options across IBM-native tools, TI/script-based approaches, and enterprise schedulers — and raised a formal <strong>Severity 4 IBM Support case</strong> to obtain IBM's official position.
+      Below is a concise summary of everything we now know, and what we should do next.
+    </p>
+
+    <!-- OBJECTIVE -->
+    <div class="section-label">
+      <span>Objective</span><div class="line"></div>
+    </div>
+    <div class="objective-card">
+      Research and determine the best design for automatically restarting the EPA (IBM Planning Analytics Cloud) instance on weekends — to proactively reclaim memory, reduce performance degradation, and improve platform stability.
+    </div>
+
+    <!-- IBM OFFICIAL RESPONSE -->
+    <div class="section-label">
+      <span>IBM Official Response — Apr 23, 2026</span><div class="line"></div>
+    </div>
+
+    <div class="ibm-block">
+      <div class="ibm-header">
+        <span class="ibm-logo">IBM</span>
+        <span class="ibm-title">Support Engineer · Jakub Makowka · Case Response</span>
+        <span class="ibm-date">April 23, 2026</span>
+      </div>
+      <div class="ibm-responses">
+
+        <div class="ibm-response-item">
+          <div class="ibm-status status-no">✕<small>Blocked</small></div>
+          <div class="ibm-text">
+            <strong>Scheduled / Automatic Restart by Customer</strong>
+            <p>Not supported in current PA Cloud versions. The Windows Task Scheduler approach that was available in older versions has been removed and is no longer supported by IBM.</p>
+          </div>
+        </div>
+
+        <div class="ibm-response-item">
+          <div class="ibm-status status-no">✕<small>Blocked</small></div>
+          <div class="ibm-text">
+            <strong>Additional IBM-Managed Maintenance Windows</strong>
+            <p>Not possible beyond IBM's standard maintenance cadence. Customers cannot request extra maintenance windows to trigger additional restarts.</p>
+          </div>
+        </div>
+
+        <div class="ibm-response-item">
+          <div class="ibm-status status-no">✕<small>Blocked</small></div>
+          <div class="ibm-text">
+            <strong>Programmatic Restart via REST API / PAW</strong>
+            <p>Only Start/Stop operations are available via the PAW Administration API. The REST endpoints do not have the required permissions to restart the underlying Windows service. A full restart cannot be triggered programmatically.</p>
+          </div>
+        </div>
+
+        <div class="ibm-response-item">
+          <div class="ibm-status status-yes">✓<small>Confirmed</small></div>
+          <div class="ibm-text">
+            <strong>IBM Weekly Maintenance Includes Data Tier Restart</strong>
+            <p>IBM confirmed that during their weekly maintenance windows, <strong>Data Tiers are usually restarted</strong>. This can be verified by reviewing Server Logs in PAW after each maintenance window.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- KEY POSITIVE FINDING -->
+    <div class="section-label">
+      <span>Key Positive Finding</span><div class="line"></div>
+    </div>
+    <div class="highlight-finding">
+      <div class="hf-label">⭐ Unexpected Outcome</div>
+      <p>
+        While all <strong>customer-triggered automated restart paths are confirmed blocked</strong>, IBM's existing
+        <strong>weekly maintenance cadence already includes a Data Tier restart</strong> — which is precisely the memory
+        reclaim mechanism we were looking for. This means EPA is very likely already benefiting from a weekly memory reset
+        through IBM's standard operations. We can <strong>verify this immediately by reviewing PAW Server Logs</strong>
+        after IBM's next maintenance window.
+      </p>
+    </div>
+
+    <!-- FINAL CONCLUSION -->
+    <div class="section-label">
+      <span>Final Conclusion</span><div class="line"></div>
+    </div>
+    <div class="conclusion">
+      <div class="c-label">SPIKE #3981779 — Conclusion</div>
+      <p>
+        All <strong>customer-controlled automated restart options are architecturally blocked</strong> in IBM PA Cloud SaaS —
+        this is a platform-level constraint, not a configuration gap.
+        However, <strong>IBM's own weekly maintenance already delivers the core memory reclaim benefit</strong> we set out to achieve.
+        The recommended path is to verify this via Server Logs, monitor RAM trends, and supplement with manual PAW restarts only
+        if IBM's maintenance cadence proves insufficient for our workload.
+      </p>
+    </div>
+
+    <!-- NEXT STEPS -->
+    <div class="section-label">
+      <span>Recommended Next Steps</span><div class="line"></div>
+    </div>
+    <div class="next-steps">
+
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <strong>Verify IBM weekly restart via PAW Server Logs</strong>
+          <span>After IBM's next maintenance window, review Server Logs in PAW Administration to confirm Data Tier restart occurred and note the timing.</span>
+          <div><span class="step-tag tag-now">Immediate</span></div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <strong>Monitor RAM trends via PAW Admin / Monitoring</strong>
+          <span>Track weekly RAM usage patterns to assess whether IBM's maintenance cadence alone is sufficient for our workload.</span>
+          <div><span class="step-tag tag-ongoing">Ongoing</span></div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <strong>Manual PAW restarts if additional cadence is needed</strong>
+          <span>If RAM trends show degradation between IBM maintenance windows, perform manual restarts via PAW Administration and register each as a Standard Change in ServiceNow for SOX compliance.</span>
+          <div><span class="step-tag tag-ifneeded">If Needed</span></div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <strong>Implement pre-restart TI hygiene chore</strong>
+          <span>Before any manual restart, run a TI chore to execute SaveDataAll and cancel zombie sessions — ensuring data integrity at the point of restart.</span>
+          <div><span class="step-tag tag-ifneeded">If Needed</span></div>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <strong>Upvote IBM Ideas PAOC-I-471</strong>
+          <span>Formally push IBM Development to deliver a native scheduled restart capability for PA Cloud customers. Link our case number as business justification evidence.</span>
+          <div><span class="step-tag tag-future">Long-Term</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- SIGN-OFF -->
+    <div class="signoff">
+      <p>I will update <strong>ADO PBI #3981779</strong> with these findings and mark the SPIKE as complete. Please feel free to reach out if you have any questions or would like to discuss further.</p>
+      <div class="sig-card">
+        <div class="sig-avatar">NP</div>
+        <div class="sig-info">
+          <strong>Niranjan Patra</strong>
+          <span>Senior TM1 / IBM Planning Analytics Consultant &nbsp;·&nbsp; Tech Mahindra — Assurant EPA</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ FOOTER ═══════════════════════════════════════════ -->
+  <div class="footer">
+    <span>SPIKE #3981779 <span class="dot">·</span> GT.GFS-Program <span class="dot">·</span> IBM PA Cloud</span>
+    <span>April 23, 2026 <span class="dot">·</span> Research Complete</span>
+  </div>
+
+</div>
+</body>
+</html>

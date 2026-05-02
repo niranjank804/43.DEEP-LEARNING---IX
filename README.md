@@ -1,7 +1,3 @@
-Hi Sherry,
-The Dev security issues have been resolved:
-General Expense — Leaf-level WRITE access is now working for Planning Analytics in Dev. Root cause was missing Access Processed = WRITE data in the Center Location Security cube in Dev.
-Workforce Planning Input — The 10 WRITE measures are now working correctly. Root cause was employee 1492775 classified under ALL EMPLOYEES Orphans in the Dev Employee dimension instead of Existing. Resolved by running DIM - Employee_WD to sync the hierarchy with Production.
-Could you please re-run your Security Enhancement testing to confirm Dev now matches Production at leaf level for both cubes?
-Thank you,
-Niranjan
+Hi Niranjan, I have checked the GFS Dev security again, and agree that the Write access at the lowest level of WFP and Gen Exp appears to be fixed now for Nancy; however, the summary points are not the same as they are in Production for her. I also checked another employee’s access (Carl Steiger) at the cell level, and it does not match Production, even though his access is set the same between the two environments. Please see v2 tab in the attached for both users’ Production vs GFS Dev comparisons.
+
+For Nancy: Production WFP Summary data shows READ access for Center 1:E03 CC / 1:MANAGERIAL LOCATIONS, but GFS Dev shown NONE:

@@ -16,35 +16,16 @@ Changes are documented and meet the team’s Definition of Ready and Definition 
 
 
 
-Hi Sherry,
+Hi Kamil,
+Thanks for the clarification — that makes sense.
+To answer your question: yes, the process did perform better in the past. The slowdown has been gradual and ties back to a few things that have changed over time.
+The Center dimension has grown quite a bit and is now sitting at around 26,000 elements, up from a much smaller count when the process was first built. Location is around 550. On top of that, both dimensions are multi-hierarchy — leaf elements can sit under 7 or more rollup parents across different hierarchy trees, which makes ELISANC heavier than it would be in a simpler structure. We are also running 252 user groups through the process now, and each one drives roughly 14.3 million ELISANC evaluations (26,000 × 550). No TM1 version upgrades have happened around the same time, so this is purely a growth and complexity issue.
+To be clear on what we need from IBM — we are not asking for TI code changes. Our questions are:
 
-Thank you for reviewing this and for the detailed testing.
+Are there server-level configuration parameters that can reduce memory pressure during ELISANC-heavy TI runs?
+Does IBM have any guidance on memory behaviour for ELISANC at this scale — 26,000+ elements, multi-hierarchy?
+Is a ~475 GB memory spike during this process expected given the scale, or does it point to a configuration gap?
 
-Your assumption was correct. The original implementation still contained hardcoded Program Code exclusions in the Data tab, which limited maintainability because any future exclusions would have required a TI code change.
-
-I updated the logic to make the exclusion handling fully data-driven using the `SSAP Excl Flag` attribute instead of hardcoded code values.
-
-The Data section now uses:
-
-
-IF( ATTRS( 'Program Code', dProgramCode, 'SSAP Excl Flag' ) @= 'Y' );
-    nRecordSkip = nRecordSkip + 1;
-    ITEMSKIP;
-ENDIF;
-
-
-I also commented  the hardcoded `ATTRPUTS` statements from the Epilog so exclusions are now controlled directly through the dimension attribute maintenance rather than embedded in TI code.
-
-I validated the change by:
-
-* setting an additional Program Code flag to `Y`
-* rerunning the process
-* confirming the skipped record count increased automatically
-* confirming no code changes were required for the new exclusion
-
-The hierarchy rebuild process (`DIM - Program Code - SSAP`) continues to work correctly using the same attribute-driven logic.
-
-Thank you again for identifying the hardcoded dependency.
-
-Regards,
-Niranjan
+Thanks,
+Niranjan Patra
+EPA System Administration

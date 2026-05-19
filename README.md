@@ -12,3 +12,39 @@ Users in the Everyone group have Read access as expected after the fix
 Security results are validated against expected behavior
 No unintended changes to unrelated security settings
 Changes are documented and meet the team’s Definition of Ready and Definition of Done
+
+
+
+
+Hi Sherry,
+
+Thank you for reviewing this and for the detailed testing.
+
+Your assumption was correct. The original implementation still contained hardcoded Program Code exclusions in the Data tab, which limited maintainability because any future exclusions would have required a TI code change.
+
+I updated the logic to make the exclusion handling fully data-driven using the `SSAP Excl Flag` attribute instead of hardcoded code values.
+
+The Data section now uses:
+
+
+IF( ATTRS( 'Program Code', dProgramCode, 'SSAP Excl Flag' ) @= 'Y' );
+    nRecordSkip = nRecordSkip + 1;
+    ITEMSKIP;
+ENDIF;
+
+
+I also commented  the hardcoded `ATTRPUTS` statements from the Epilog so exclusions are now controlled directly through the dimension attribute maintenance rather than embedded in TI code.
+
+I validated the change by:
+
+* setting an additional Program Code flag to `Y`
+* rerunning the process
+* confirming the skipped record count increased automatically
+* confirming no code changes were required for the new exclusion
+
+The hierarchy rebuild process (`DIM - Program Code - SSAP`) continues to work correctly using the same attribute-driven logic.
+
+Thank you again for identifying the hardcoded dependency.
+
+Regards,
+Niranjan

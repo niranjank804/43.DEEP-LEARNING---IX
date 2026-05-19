@@ -17,15 +17,15 @@ Changes are documented and meet the team’s Definition of Ready and Definition 
 
 
 Hi Kamil,
-Thanks for the clarification — that makes sense.
-To answer your question: yes, the process did perform better in the past. The slowdown has been gradual and ties back to a few things that have changed over time.
-The Center dimension has grown quite a bit and is now sitting at around 26,000 elements, up from a much smaller count when the process was first built. Location is around 550. On top of that, both dimensions are multi-hierarchy — leaf elements can sit under 7 or more rollup parents across different hierarchy trees, which makes ELISANC heavier than it would be in a simpler structure. We are also running 252 user groups through the process now, and each one drives roughly 14.3 million ELISANC evaluations (26,000 × 550). No TM1 version upgrades have happened around the same time, so this is purely a growth and complexity issue.
-To be clear on what we need from IBM — we are not asking for TI code changes. Our questions are:
+Thanks for the thorough response — that is very clear and helpful.
+We understand and accept IBM's assessment. The memory spike being a scaling limitation of the current approach rather than a misconfiguration is useful to have on record, and we have shared that context internally.
+We will look at scheduling the security chore during off-peak hours as the primary mitigation for now. Any longer-term redesign of the processing approach will be scoped separately as a project.
+A couple of quick follow-up questions before we close this out:
 
-Are there server-level configuration parameters that can reduce memory pressure during ELISANC-heavy TI runs?
-Does IBM have any guidance on memory behaviour for ELISANC at this scale — 26,000+ elements, multi-hierarchy?
-Is a ~475 GB memory spike during this process expected given the scale, or does it point to a configuration gap?
+Is there any IBM documentation or best practice guide on handling large-scale security propagation in TM1 that you could point us to? Even if code redesign is out of support scope, it would be useful reference material.
+Would you recommend keeping this case open while we monitor the scheduled runs, or is it better to close and raise a new case if we see unexpected behaviour?
 
-Thanks,
+Thanks again for your time on this.
+Regards,
 Niranjan Patra
 EPA System Administration

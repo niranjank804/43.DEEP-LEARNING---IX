@@ -17,15 +17,15 @@ Changes are documented and meet the team’s Definition of Ready and Definition 
 
 
 Hi Kamil,
-Thanks for the thorough response — that is very clear and helpful.
-We understand and accept IBM's assessment. The memory spike being a scaling limitation of the current approach rather than a misconfiguration is useful to have on record, and we have shared that context internally.
-We will look at scheduling the security chore during off-peak hours as the primary mitigation for now. Any longer-term redesign of the processing approach will be scoped separately as a project.
-A couple of quick follow-up questions before we close this out:
+Thank you — the documentation links are helpful and we will use them as reference.
+We are satisfied with the outcome of this case. To summarise our understanding for the record:
 
-Is there any IBM documentation or best practice guide on handling large-scale security propagation in TM1 that you could point us to? Even if code redesign is out of support scope, it would be useful reference material.
-Would you recommend keeping this case open while we monitor the scheduled runs, or is it better to close and raise a new case if we see unexpected behaviour?
+The memory spike (~475 GB) during the security TI process is expected behaviour at our current scale and is not a misconfiguration
+No server-level parameter will significantly reduce peak memory for ELISANC-heavy workloads
+Any further reduction in memory footprint would require a redesign of the processing approach, which is outside standard support scope
 
-Thanks again for your time on this.
+We will proceed with scheduling the security chore during off-peak hours as our mitigation. If we observe any unexpected behaviour after monitoring the scheduled runs, we will raise a new case.
+You can go ahead and close this case. Thanks again for your help throughout.
 Regards,
 Niranjan Patra
 EPA System Administration

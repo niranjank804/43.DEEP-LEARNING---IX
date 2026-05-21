@@ -16,16 +16,3 @@ Changes are documented and meet the team’s Definition of Ready and Definition 
 
 
 
-Hi Kamil,
-Thank you — the documentation links are helpful and we will use them as reference.
-We are satisfied with the outcome of this case. To summarise our understanding for the record:
-
-The memory spike (~475 GB) during the security TI process is expected behaviour at our current scale and is not a misconfiguration
-No server-level parameter will significantly reduce peak memory for ELISANC-heavy workloads
-Any further reduction in memory footprint would require a redesign of the processing approach, which is outside standard support scope
-
-We will proceed with scheduling the security chore during off-peak hours as our mitigation. If we observe any unexpected behaviour after monitoring the scheduled runs, we will raise a new case.
-You can go ahead and close this case. Thanks again for your help throughout.
-Regards,
-Niranjan Patra
-EPA System Administration

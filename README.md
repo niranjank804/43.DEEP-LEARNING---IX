@@ -15,4 +15,14 @@ Changes are documented and meet the team’s Definition of Ready and Definition 
 
 
 
+Good Evening!
+
+Can you please look over all the code that was done in the GFS Dev environment as I noticed it wasn’t using the most current version of Production for the starting code. All of the code that was deployed for the Argentina build isn’t in that environment and I wanted to make sure there was no overlap between what you changed and the code related to Argentina. I honestly do not know the best approach to this, perhaps if you need suggestions maybe Robert knows of the best way or can point you to what was moved for the last code change and see if anything you coded was one of those RUX, PRO, etc. 
+
+Thanks,
+Lisa 
+
+
+
+
 

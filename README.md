@@ -1,42 +1,23 @@
-Hi  Sherry, and Lisa,
+Hi Lisa,
 
-I wanted to share the findings from my investigation into why users could not see the 2026RF1 version after it was manually inserted, and outline the fix I have prepared before running anything in DEV.
+That is a very important point and it does change my thinking significantly. Thank you for raising it.
 
-Root Cause
+You are right — if all versions prior to 2026RF1 were visible to users without any issue, then the root cause cannot simply be a missing security process. If that were the problem, it would have affected every version, not just RF1. Something specific changed between when Plan was locked in February and when RF1 was created in May.
 
-After reviewing every chore and security process in Production, I confirmed the following:
+Before I run anything in DEV, I need to check three things:
 
-The Dimensions chore runs a process called Security - Master nightly, which handles Center and Location security and calls System - Refresh Security at the end. However, there is no process anywhere in the system that writes security entries to }ElementSecurity_Version for newly added Version elements.
+1 — How was 2026RF1 created vs prior versions?
+Was 2026RF1 created manually (inserted directly into the Version dimension), or was it created through a TI process? If prior versions were created via a process that also set their security entries, but RF1 was inserted manually without running that process, that would explain exactly what happened.
 
-When 2026RF1 was manually inserted into the Version dimension, no security access entry was created for any group. The nightly Security - Master process ran on schedule and correctly refreshed the security cache — but since no access entry existed for 2026RF1, users could not see it. The cache was accurate, it was the missing security entry that was the problem.
+2 — What is currently in }ElementSecurity_Version?
+Can someone check this cube in PAW and tell me: do prior versions (2026Plan, 2025RF1, etc.) have entries in }ElementSecurity_Version for all groups? And does 2026RF1 have no entries, or an entry with the wrong access level?
 
-Robert's manual intervention fixed it immediately because he wrote the security entry and then ran System - Refresh Security, pushing the update to all users.
+3 — Robert — what specifically did you do to fix it?
+Did you manually add an entry to }ElementSecurity_Version for 2026RF1? Or did you run a process? And if a process — which one? This tells us exactly what was done for prior versions that was missed for RF1.
 
-Gap Identified
+Once I have answers to these three questions I will have the complete picture and can give a definitive root cause and fix.
 
-This is not a one-time issue. Every time a new version is manually inserted, this same problem will occur because no automated process exists to grant security on new Version elements. This was never built.
-
-Fix Prepared
-
-I have built a new TI process called Security - Set Version Access in DEV. It does the following:
-
-Loops through the Version dimension and the Groups dimension
-Writes READ (or WRITE) access to }ElementSecurity_Version for each group
-Calls System - Refresh Security at the end
-Supports parameters so it can be run for a specific version or all versions, a specific group or all groups
-Once confirmed, the plan is to:
-
-Run the process in DEV and verify it completes successfully
-Add it to Security - Master in the Dimensions chore so Version security is handled automatically every night — the same way Center and Location security is handled today
-Migrate to Production
-Update the version creation runbook: after any manual version insert, run Security - Set Version Access immediately — do not wait for the overnight chore
-Question for Robert — Before I Run
-
-Before I run this in DEV, I need your confirmation on one thing. When you fixed the 2026RF1 visibility issue, which groups did you grant access to, and what access level (READ or WRITE)? I want to make sure the new process matches exactly what the correct security setup should look like, so I do not overwrite anything incorrectly.
-
-Once I have your confirmation I will run in DEV, verify the results, and share the output from Process Stats before touching Production.
-
-Please let me know if you have any questions or concerns about this approach.
+Holding off on running anything in DEV until we have this confirmed.
 
 Thanks,
-Niranjan
+Niranjan Patra

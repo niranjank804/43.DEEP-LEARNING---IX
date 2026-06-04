@@ -1,23 +1,25 @@
-Hi Lisa,
+Hi Sherry,
 
-That is a very important point and it does change my thinking significantly. Thank you for raising it.
+That is the missing piece. Thank you — I believe that security group clean-up on the cube to cube settings is the root cause.
 
-You are right — if all versions prior to 2026RF1 were visible to users without any issue, then the root cause cannot simply be a missing security process. If that were the problem, it would have affected every version, not just RF1. Something specific changed between when Plan was locked in February and when RF1 was created in May.
+Here is why this fits perfectly:
 
-Before I run anything in DEV, I need to check three things:
+All versions created before the clean-up were already visible to users — their security was already in place and was not affected
+2026RF1 was the first version created after the clean-up — whatever setting was previously granting access to new version elements was no longer there, so RF1 had no security entry and users could not see it
+Robert's manual fix worked because he directly restored that access for RF1 specifically
+Your suggestion to restore a late 2025 backup in a lower environment is exactly the right approach. Comparing the before and after settings will show us precisely what was changed and what needs to be restored or rebuilt.
 
-1 — How was 2026RF1 created vs prior versions?
-Was 2026RF1 created manually (inserted directly into the Version dimension), or was it created through a TI process? If prior versions were created via a process that also set their security entries, but RF1 was inserted manually without running that process, that would explain exactly what happened.
+To move forward I need two things from you Sherry:
 
-2 — What is currently in }ElementSecurity_Version?
-Can someone check this cube in PAW and tell me: do prior versions (2026Plan, 2025RF1, etc.) have entries in }ElementSecurity_Version for all groups? And does 2026RF1 have no entries, or an entry with the wrong access level?
+1 — Can you describe what the clean-up involved?
+Specifically — which groups were affected, and what were the cube to cube settings you modified? Even a general description helps narrow down where to look when we do the comparison.
 
-3 — Robert — what specifically did you do to fix it?
-Did you manually add an entry to }ElementSecurity_Version for 2026RF1? Or did you run a process? And if a process — which one? This tells us exactly what was done for prior versions that was missed for RF1.
+2 — Can you arrange the backup restore in DEV or QA?
+A late 2025 backup (before the clean-up) restored in a lower environment will let us do a side-by-side comparison of the security settings then vs now and identify the exact gap.
 
-Once I have answers to these three questions I will have the complete picture and can give a definitive root cause and fix.
+Once we see the difference I can rebuild the correct setting and test it in DEV before touching Production.
 
-Holding off on running anything in DEV until we have this confirmed.
+Holding the new process I built until we confirm this is the right fix — I do not want to apply a workaround if we can restore the correct setting that was there before.
 
 Thanks,
-Niranjan Patra
+Niranjan

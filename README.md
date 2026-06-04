@@ -1,138 +1,42 @@
-#Section Prolog
+Hi  Sherry, and Lisa,
 
-#****Begin: Generated Statements***
-#****End: Generated Statements****
+I wanted to share the findings from my investigation into why users could not see the 2026RF1 version after it was manually inserted, and outline the fix I have prepared before running anything in DEV.
 
-################################################
-# Security - Master
-################################################
-#
-# PURPOSE:
-#    This process runs all of the processes for Dimension updates used in Nightly and Daily processing
-#
-# PARAMETERS:
-#    pYN - Y to Run
-#
-# MODIFICATION HISTORY:
-# 06/26/2023: Created - TK / QueBIT
-#
-##################################################
+Root Cause
 
-# ===============================    PROCESS STATS  ====================================
+After reviewing every chore and security process in Production, I confirmed the following:
 
-sCube = 'Process Stats' ;
-sProcess = GETPROCESSNAME;
-sLogFile = GETPROCESSERRORFILEDIRECTORY | GETPROCESSERRORFILENAME;
-sNow = TIMST( NOW, '\M \D, \Y at \H \p \i min \s sec' ) ;
-sDate = TIMST( NOW, '\Y\m\d' );
+The Dimensions chore runs a process called Security - Master nightly, which handles Center and Location security and calls System - Refresh Security at the end. However, there is no process anywhere in the system that writes security entries to }ElementSecurity_Version for newly added Version elements.
 
-# Grab Current Line Item
-# -------------------------------------- 
-CurrLine = CELLGETS ( sCube , 'All Index' , sDate , sProcess , 'Current Line Item' );
+When 2026RF1 was manually inserted into the Version dimension, no security access entry was created for any group. The nightly Security - Master process ran on schedule and correctly refreshed the security cache — but since no access entry existed for 2026RF1, users could not see it. The cache was accurate, it was the missing security entry that was the problem.
 
-# Initial measures
-# ---------------------------------
-CELLPUTS( sNow , sCube , CurrLine , sDate , sProcess , 'Start Time' );
-CELLPUTS( sNow , sCube , CurrLine , 'Latest' , sProcess , 'Start Time' );
-CELLPUTS( 'Did not end' , sCube , CurrLine , sDate , sProcess , 'End Time' );
-CELLPUTS( 'Did not end' , sCube , CurrLine , 'Latest' , sProcess , 'End Time' );
+Robert's manual intervention fixed it immediately because he wrote the security entry and then ran System - Refresh Security, pushing the update to all users.
 
-# User
-# ------------------
-vNowStart = NOW;
-IF( DIMIX( '}Clients', TM1USER() ) = 0 );
-    sUser = TM1USER();
-ELSE;
-    sUser = ATTRS( '}Clients' , TM1USER() , '}TM1_DefaultDisplayValue' ) ;
-ENDIF;
-CELLPUTS( sUser , sCube , CurrLine , sDate , sProcess, 'Last Executed By' );
-CELLPUTS( sUser , sCube , CurrLine , 'Latest', sProcess, 'Last Executed By' );
+Gap Identified
 
-# Record Count
-# -------------------------------
-nRecordCount = 0;
-CELLPUTN( nRecordCount , sCube , CurrLine , sDate , sProcess , 'Record Count' );
-CELLPUTN( nRecordCount , sCube , CurrLine , 'Latest', sProcess, 'Record Count' );
+This is not a one-time issue. Every time a new version is manually inserted, this same problem will occur because no automated process exists to grant security on new Version elements. This was never built.
 
-# Skipped Records
-# ------------------------------------
-nRecordSkip = 0;
-CELLPUTN( nRecordSkip , sCube , CurrLine , sDate , sProcess, 'Skipped Records' );
-CELLPUTN( nRecordSkip , sCube , CurrLine , 'Latest', sProcess, 'Skipped Records' );
+Fix Prepared
 
-# Processed Records
-# -----------------------------------------
-nRecordProcess = 0;
-CELLPUTN( nRecordProcess , sCube , CurrLine , sDate , sProcess , 'Processed Records' );
-CELLPUTN( nRecordProcess , sCube , CurrLine , 'Latest', sProcess, 'Processed Records' );
+I have built a new TI process called Security - Set Version Access in DEV. It does the following:
 
-# Parameters
-# --------------------
-vParamFilled = 'None' ;
-CELLPUTS( vParamFilled, sCube , CurrLine , sDate , sProcess , 'Parameters' );
-CELLPUTS( vParamFilled, sCube , CurrLine , 'Latest' , sProcess , 'Parameters' );
+Loops through the Version dimension and the Groups dimension
+Writes READ (or WRITE) access to }ElementSecurity_Version for each group
+Calls System - Refresh Security at the end
+Supports parameters so it can be run for a specific version or all versions, a specific group or all groups
+Once confirmed, the plan is to:
 
-#===================================================================================== 
+Run the process in DEV and verify it completes successfully
+Add it to Security - Master in the Dimensions chore so Version security is handled automatically every night — the same way Center and Location security is handled today
+Migrate to Production
+Update the version creation runbook: after any manual version insert, run Security - Set Version Access immediately — do not wait for the overnight chore
+Question for Robert — Before I Run
 
-EXECUTEPROCESS( 'Security - Set Center Location Access' );
-EXECUTEPROCESS( 'Security - Set Center Location Access WFP' );
-EXECUTEPROCESS( 'System - Refresh Security' );
-#Section Metadata
+Before I run this in DEV, I need your confirmation on one thing. When you fixed the 2026RF1 visibility issue, which groups did you grant access to, and what access level (READ or WRITE)? I want to make sure the new process matches exactly what the correct security setup should look like, so I do not overwrite anything incorrectly.
 
-#****Begin: Generated Statements***
-#****End: Generated Statements****
-#Section Data
+Once I have your confirmation I will run in DEV, verify the results, and share the output from Process Stats before touching Production.
 
-#****Begin: Generated Statements***
-#****End: Generated Statements****
-#Section Epilog
+Please let me know if you have any questions or concerns about this approach.
 
-#****Begin: Generated Statements***
-#****End: Generated Statements****
-
-#===========================           FINAL CODE IN EPILOG        ==============================
-
-sLogFile = GETPROCESSERRORFILEDIRECTORY | GETPROCESSERRORFILENAME;
-sNow = TIMST( NOW,'\M \D, \Y at \H \p \i min \s sec');
-vNowEnd = NOW;
-
-# Calculate Duration
-# ----------------------------
-vDelta = ( vNowEnd - vNowStart ) ;
-vDuration = vDelta * 1440 ;
-vDurMin = INT(vDuration);
-IF (vDurMin = 0) ;
-  vDurSec = ROUND ( vDuration * 60 ) ;
-ELSE;
-  vDurSec = ROUND (MOD ( vDuration , vDurMin ) * 60) ;
-ENDIF;
-
-sDuration = NUMBERTOSTRING(vDurMin) | ' min ' | NUMBERTOSTRING(vDurSec) | ' sec' ;
-
-# Duration
-# --------------
-CELLPUTS( sDuration , sCube , CurrLine , sDate , sProcess , 'Duration' );
-CELLPUTS( sDuration , sCube , CurrLine , 'Latest' , sProcess , 'Duration' );
-
-# End Time
-# ----------------
-CELLPUTS( sNow , sCube , CurrLine , sDate , sProcess , 'End Time' );
-CELLPUTS( sNow , sCube , CurrLine , 'Latest' , sProcess , 'End Time' );
-
-# Record Count
-# ----------------------
-CELLPUTN( nRecordCount , sCube , CurrLine , sDate , sProcess , 'Record Count' );
-CELLPUTN( nRecordCount , sCube , CurrLine , 'Latest' , sProcess , 'Record Count' );
-
-# Skipped Records
-# ---------------------------
-CELLPUTN( nRecordSkip , sCube , CurrLine , sDate , sProcess , 'Skipped Records' );
-CELLPUTN( nRecordSkip , sCube , CurrLine , 'Latest' , sProcess , 'Skipped Records' );
-
-# Processed Records
-# -------------------------------
-nRecordProcess = nRecordCount - nRecordSkip;
-CELLPUTN( nRecordProcess , sCube , CurrLine , sDate , sProcess , 'Processed Records' );
-CELLPUTN( nRecordProcess , sCube , CurrLine , 'Latest' , sProcess , 'Processed Records' );
-
-#=====================================================================================
+Thanks,
+Niranjan

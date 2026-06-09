@@ -6,13 +6,14 @@ After going through all the chores and security processes, the issue came down t
 
 To fix this I built a new TI process called Security - Set Version Access. It loops through all elements in the Version dimension and writes READ access to }ElementSecurity_Version for the 12 groups Robert used when he manually fixed 2026RF1. I also updated Security - Master to call this new process before System - Refresh Security runs, so the Dimensions chore will handle Version security automatically every night going forward without any manual steps needed.
 
-Both changes have been tested in DEV and are ready to migrate to Production. Once migrated I will run the process once to cover all existing versions and the overnight chore will take care of everything from there.
+Both changes have been tested in DEV  and the overnight Dimnensions chore will take care of everything from there.
 
-To verify the fix is working on your end, you can add a new test version element to the Version dimension in Production, then run Security - Set Version Access with that version name as the parameter. Log in as a regular business user straight after and check whether the new version is visible in the Version drop down. It should appear immediately without needing to wait for the overnight chore. Once confirmed you can delete the test element and we are good to go. If you would prefer I can walk you through this when we migrate to Production.
+To verify the fix is working on your end, you can add a new test version element to the Version dimension then run Security - Set Version Access with that version name as the parameter. Log in as a regular business user straight after and check whether the new version is visible in the Version drop down. It should appear immediately without needing to wait for the overnight chore. Once confirmed you can delete the test element and we are good to go. 
+
 
 For any future version inserts the step is simple — insert the version and run Security - Set Version Access with that version name and users will see it straight away without waiting for the overnight run.
 
-Let me know if you are happy for me to go ahead with the Production migration.
+
 
 Thanks,
 Niranjan

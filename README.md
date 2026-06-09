@@ -1,22 +1,18 @@
+Hi Lisa,
 
+Just a quick update to let you know PBI-4008402 is done.
 
-Hi Sherry, Lisa, and Robert,
+After going through all the chores and security processes, the issue came down to the security group clean-up Sherry did on the cube to cube settings between February and May. The Everyone group was modified during that clean-up, which meant any new Version element added after that point would not automatically get a security entry in }ElementSecurity_Version. Since 2026RF1 was the first version inserted after the clean-up, users could not see it. All versions created before the clean-up were not affected as their entries were already in place.
 
-I hope you are all doing well. I wanted to gently follow up on my previous emails regarding the 2026RF1 version visibility investigation as I have not heard back yet. I completely understand everyone is busy and I appreciate your time.
+To fix this I built a new TI process called Security - Set Version Access. It loops through all elements in the Version dimension and writes READ access to }ElementSecurity_Version for the 12 groups Robert used when he manually fixed 2026RF1. I also updated Security - Master to call this new process before System - Refresh Security runs, so the Dimensions chore will handle Version security automatically every night going forward without any manual steps needed.
 
-I have the fix ready to test in DEV and I am just waiting on a few quick inputs before I can move forward:
+Both changes have been tested in DEV and are ready to migrate to Production. Once migrated I will run the process once to cover all existing versions and the overnight chore will take care of everything from there.
 
-Robert — Could you please let me know what you did to fix 2026RF1? Specifically which groups you granted access to and whether you wrote directly to `}ElementSecurity_Version` or ran a process?
+To verify the fix is working on your end, you can add a new test version element to the Version dimension in Production, then run Security - Set Version Access with that version name as the parameter. Log in as a regular business user straight after and check whether the new version is visible in the Version drop down. It should appear immediately without needing to wait for the overnight chore. Once confirmed you can delete the test element and we are good to go. If you would prefer I can walk you through this when we migrate to Production.
 
-Sherry — Could you confirm whether an Everyone group or any default group was removed or modified during the cube to cube security clean-up?
+For any future version inserts the step is simple — insert the version and run Security - Set Version Access with that version name and users will see it straight away without waiting for the overnight run.
 
-Quick check — If someone has a few minutes, opening `}ElementSecurity_Version` in PAW and checking whether 2026RF1 has a security entry compared to prior versions would be very helpful.
+Let me know if you are happy for me to go ahead with the Production migration.
 
-Once I have these answers I can test the fix in DEV straight away and we can get this resolved properly.
-
-If it is easier to discuss over a quick call rather than over email please let me know and I am happy to find a time that works for everyone.
-
-Thank you all so much for your help on this. I really appreciate it.
-
-Kind regards,
+Thanks,
 Niranjan

@@ -1,21 +1,22 @@
+
+
 Hi Sherry, Lisa, and Robert,
 
-Just following up on my email from yesterday as I have not yet received a response. I want to make sure this does not get lost given the impact it has on users going forward.
+I hope you are all doing well. I wanted to gently follow up on my previous emails regarding the 2026RF1 version visibility investigation as I have not heard back yet. I completely understand everyone is busy and I appreciate your time.
 
-To summarize what I still need before I can finalize and test the fix:
+I have the fix ready to test in DEV and I am just waiting on a few quick inputs before I can move forward:
 
-From Robert:
-When you manually fixed 2026RF1 visibility — did you write directly to }ElementSecurity_Version, or did you run a process? And which groups did you grant access to? This is the most critical piece I am waiting on.
+Robert — Could you please let me know what you did to fix 2026RF1? Specifically which groups you granted access to and whether you wrote directly to `}ElementSecurity_Version` or ran a process?
 
-From Sherry:
-During the security group clean-up on the cube to cube settings — was an Everyone group or any catch-all default group removed or modified? This is most likely what caused RF1 to have no automatic security after it was inserted.
+Sherry — Could you confirm whether an Everyone group or any default group was removed or modified during the cube to cube security clean-up?
 
-Quick check — anyone:
-Can someone open }ElementSecurity_Version in PAW and confirm whether prior versions (e.g. 2026Plan) have entries for all groups while 2026RF1 has none? This takes two minutes and will confirm the gap immediately without needing a backup restore.
+Quick check — If someone has a few minutes, opening `}ElementSecurity_Version` in PAW and checking whether 2026RF1 has a security entry compared to prior versions would be very helpful.
 
-I have the fix built and ready to test in DEV. I am just waiting on these answers to make sure I apply the right solution before running anything.
+Once I have these answers I can test the fix in DEV straight away and we can get this resolved properly.
 
-Could you please respond by end of day today so we can keep this moving? Happy to jump on a quick call if that is easier.
+If it is easier to discuss over a quick call rather than over email please let me know and I am happy to find a time that works for everyone.
 
-Thanks,
-Niranjan Patra
+Thank you all so much for your help on this. I really appreciate it.
+
+Kind regards,
+Niranjan

@@ -1,14 +1,14 @@
-Subject: PBI 4034136 – Argentina SCN WFP Load – Confirmation needed before I make any changes
+PBI 4034136 – Argentina SCN WFP Load – Confirmation needed before I make any changes
 
-Hi [Name],
+Hi Lisa,
 
-Before I touch the SCN Workforce Planning Summary – Copy Version process for PBI 4034136, I want to confirm a few points so I build it right the first time and don't rework anything later. Could you please confirm the following:
+Before I touch the SCN Workforce Planning Summary – Copy Version process for PBI 4034136, I want to confirm a few points so I build it. Could you please confirm the following:
 
-1. Definition of "Current Year" (most important)
+1. Definition of "Current Year" 
 The PBI asks the load to start from the Current Year instead of Last Actual Period. I can derive "Current Year" two ways:
 
-Server calendar year – simplest, no dependencies.
-Planning year maintained by Finance – read from a control object so Finance owns the rollover.
+  1.Server calendar year – simplest, no dependencies.
+  2.Planning year maintained by Finance – read from a control object so Finance owns the rollover.
 This matters at year-end: if Workforce Planning starts budgeting FY2027 while the server clock still reads December 2026, the server-year option would not load 2027 until the calendar turns. Which definition should I use?
 
 2. Calendar vs. fiscal year

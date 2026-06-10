@@ -1,19 +1,24 @@
-Hi Lisa,
+Subject: PBI 4034136 – Argentina SCN WFP Load – Confirmation needed before I make any changes
 
-Just a quick update to let you know PBI-4008402 is done.
+Hi [Name],
 
-After going through all the chores and security processes, the issue came down to the security group clean-up Sherry did on the cube to cube settings between February and May. The Everyone group was modified during that clean-up, which meant any new Version element added after that point would not automatically get a security entry in }ElementSecurity_Version. Since 2026RF1 was the first version inserted after the clean-up, users could not see it. All versions created before the clean-up were not affected as their entries were already in place.
+Before I touch the SCN Workforce Planning Summary – Copy Version process for PBI 4034136, I want to confirm a few points so I build it right the first time and don't rework anything later. Could you please confirm the following:
 
-To fix this I built a new TI process called Security - Set Version Access. It loops through all elements in the Version dimension and writes READ access to }ElementSecurity_Version for the 12 groups Robert used when he manually fixed 2026RF1. I also updated Security - Master to call this new process before System - Refresh Security runs, so the Dimensions chore will handle Version security automatically every night going forward without any manual steps needed.
+1. Definition of "Current Year" (most important)
+The PBI asks the load to start from the Current Year instead of Last Actual Period. I can derive "Current Year" two ways:
 
-Both changes have been tested in DEV  and the overnight Dimnensions chore will take care of everything from there.
+Server calendar year – simplest, no dependencies.
+Planning year maintained by Finance – read from a control object so Finance owns the rollover.
+This matters at year-end: if Workforce Planning starts budgeting FY2027 while the server clock still reads December 2026, the server-year option would not load 2027 until the calendar turns. Which definition should I use?
 
-To verify the fix is working on your end, you can add a new test version element to the Version dimension then run Security - Set Version Access with that version name as the parameter. Log in as a regular business user straight after and check whether the new version is visible in the Version drop down. It should appear immediately without needing to wait for the overnight chore. Once confirmed you can delete the test element and we are good to go. 
+2. Calendar vs. fiscal year
+Period leaf members are YYYYMM (calendar). Is the planning "year" the calendar year, or do we run a non-January fiscal year?
 
+3. Scope
+Is this change for the Argentina SCN process only, or should the same Current-Year logic apply to other locations / WFP load processes as well?
 
-For any future version inserts the step is simple — insert the version and run Security - Set Version Access with that version name and users will see it straight away without waiting for the overnight run.
+4. Last Actual Period
+After this change the process will no longer read "Last Actual Period" from Global Variables. Is that value still used by other processes (leave it as-is), or is it being fully retired?
 
-
-
-Thanks,
-Niranjan
+5. Forward boundary
+Confirm we load Current Year and everything forward, including all forecast/future periods, with no upper cut-off.

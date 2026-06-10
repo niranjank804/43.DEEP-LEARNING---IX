@@ -1,7 +1,0 @@
-When the SSAP file is loaded into EPA there is an issue with the DIM Hierarchy build for Program Codes where they are shown in the Control Total, however do not populate into the Program Code Include Hierarchy when built. 
-
-We need to figure out why this is happening and add any steps to the load, calculate process that adds these items and builds the hierarchy. 
-
-
-Acceptance cretira:
-Validate that all Program codes that are not flagged to be in the Program Code hierarchy are all listed.

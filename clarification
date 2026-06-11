@@ -1,22 +1,12 @@
-Hi Lisa,
+PBI 4055780 – Quick confirmation on General Expense zero-out
 
-An update on PBI 4055969. I've isolated the root cause, and it turns out to be a data/hierarchy difference in Production, not a problem with the cell security rule itself.
+Hi [Name],
 
-What's happening: The salary security rule hides compensation for Limited users by checking whether an employee rolls up under the Existing (or ALL EMPLOYEES Orphans) consolidation in the Employee dimension. I compared the same employee (100325) in both environments:
+Quick question before I finalize PBI 4055780 on the "SCN General Expense – Load to General Expense" process.
 
-Dev/QA: ALL EMPLOYEES → Existing → 100325 — the employee is under Existing, so the rule correctly hides the salary.
-Production: Employee Control Total → 100325 — the employee sits directly under the top node, outside Existing, so the rule's check returns false and the salary is exposed.
-It shows up specifically on Version = Plan because the Forecast version has an additional Center/Location gate that masks it, whereas Plan does not.
+Is this process the sole owner of the Forecast version's data in the General Expense cube? I want to widen the zero-out to clear all periods, and need to confirm no other process loads prior-year data there that this would remove.
 
-So the rule logic is correct (it works as intended in Dev). The defect is that the Production Employee hierarchy is built differently — current employees are landing directly under Employee Control Total instead of under Existing. I'd like to trace the Employee dimension build / Workday load to understand why Production parents them that way.
+Once you confirm, I'll make the change and re-run.
 
-Important for testing: because Dev already nests employees under Existing, this issue will not reproduce in Dev/QA — the data already looks secure there. So having Mayank validate in Dev won't confirm the fix. We'll need to either replicate the Production hierarchy in Dev or validate against Production data.
-
-Recommended approach:
-
-Correct the Production Employee hierarchy so current employees roll up under Existing (matching Dev) — this resolves the exposure with no rule change.
-Optionally, harden the rule so it fails safe (hides compensation for anyone except New/Replacement future hires), so a future hierarchy anomaly can't re‑expose salary. This also keeps your Option‑2 decision intact — Limited users still see/input compensation for future hires only.
-Let me know if you'd like me to proceed with the hierarchy investigation, the rule hardening, or both, and I'll line up the fix and a proper test.
-
-Regards,
+Thanks,
 Niranjan

@@ -1,12 +1,1 @@
-PBI 4055780 – Quick confirmation on General Expense zero-out
-
-Hi [Name],
-
-Quick question before I finalize PBI 4055780 on the "SCN General Expense – Load to General Expense" process.
-
-Is this process the sole owner of the Forecast version's data in the General Expense cube? I want to widen the zero-out to clear all periods, and need to confirm no other process loads prior-year data there that this would remove.
-
-Once you confirm, I'll make the change and re-run.
-
-Thanks,
-Niranjan
+yes please, could you restore the QA environment from the backup? I had active changes to the 'SCN General Expense – Load to General Expense' TI process as part of PBI 4055780 that I need to continue working on. Thanks!"

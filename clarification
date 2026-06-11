@@ -1,23 +1,22 @@
-**Subject:** RE: FW: WFP – Security issue (PBI 4055969) – Confirmation needed before fix
-
 Hi Lisa,
 
-Thank you — I've researched PBI 4055969 and have the fix ready, but I need one confirmation from you before I apply it in Dev.
+An update on PBI 4055969. I've isolated the root cause, and it turns out to be a data/hierarchy difference in Production, not a problem with the cell security rule itself.
 
-**Findings:** A Limited user could see salary data on Version = Plan because the salary measures are protected by a single rule (0110) that only hides them when the employee rolls up under the `Existing` / `ALL EMPLOYEES Orphans` consolidation. In Forecast the Center/Location gate masks that gap; Plan has no such gate, so salary fell through to a default READ. I confirmed in `}ClientGroups` that the user holds `WorkForce Planning Limited_Write` only, so this is genuinely a Limited user who shouldn't see it.
+What's happening: The salary security rule hides compensation for Limited users by checking whether an employee rolls up under the Existing (or ALL EMPLOYEES Orphans) consolidation in the Employee dimension. I compared the same employee (100325) in both environments:
 
-**Confirmation required:** The fix removes that employee‑rollup condition so Limited users are blocked from salary in **every** version. Because the rule sits above the write rules, this also means **a Limited user could no longer key a Pay Rate for New / Replacement positions** — not just existing employees.
+Dev/QA: ALL EMPLOYEES → Existing → 100325 — the employee is under Existing, so the rule correctly hides the salary.
+Production: Employee Control Total → 100325 — the employee sits directly under the top node, outside Existing, so the rule's check returns false and the salary is exposed.
+It shows up specifically on Version = Plan because the Forecast version has an additional Center/Location gate that masks it, whereas Plan does not.
 
-Please confirm which behavior is intended:
+So the rule logic is correct (it works as intended in Dev). The defect is that the Production Employee hierarchy is built differently — current employees are landing directly under Employee Control Total instead of under Existing. I'd like to trace the Employee dimension build / Workday load to understand why Production parents them that way.
 
-1. **Block Limited users from salary on all employee types, including new hires** (what the proposed fix does), or
-2. **Allow Limited users to still enter Pay Rate for New / Replacement positions** — in which case I'll build a narrower carve‑out that keeps that write access while blocking existing‑employee salary.
+Important for testing: because Dev already nests employees under Existing, this issue will not reproduce in Dev/QA — the data already looks secure there. So having Mayank validate in Dev won't confirm the fix. We'll need to either replicate the Production hierarchy in Dev or validate against Production data.
 
-Once you confirm, I'll apply the change and test in Dev. I'll coordinate with Sherry to set Mayank's security to Limited so he can validate the views, then share results before we promote to Production.
+Recommended approach:
+
+Correct the Production Employee hierarchy so current employees roll up under Existing (matching Dev) — this resolves the exposure with no rule change.
+Optionally, harden the rule so it fails safe (hides compensation for anyone except New/Replacement future hires), so a future hierarchy anomaly can't re‑expose salary. This also keeps your Option‑2 decision intact — Limited users still see/input compensation for future hires only.
+Let me know if you'd like me to proceed with the hierarchy investigation, the rule hardening, or both, and I'll line up the fix and a proper test.
 
 Regards,
 Niranjan
-
----
-
-Want me to fold the chosen option into the document and the rule once Lisa replies? I can also save this email draft as a file if you'd like it alongside the PBI doc.

@@ -1,0 +1,18 @@
+Subject: Action Required – Confirmation needed on WFP Limited Security Fix
+
+Hi Lisa,
+
+I have the fix ready for the Workforce Planning security issue (Limited users seeing salary on Version = Plan), but I need one confirmation from you before I apply it.
+
+Background: The fix removes the employee‑rollup condition from Rule 0110 so Limited users are blocked from salary measures (Pay Rate, STIP, Allowance Rate, Base/Total Annual Pay, etc.) in every version, not just where a gate happens to mask it today.
+
+Confirmation required: Because that rule sits above the write rules, blocking salary for all employees also means a Limited user could no longer enter a Pay Rate for New / Replacement positions — not only existing employees.
+
+Please confirm which behavior is intended:
+
+Block Limited users from salary on all employee types, including new hires (this is what the proposed fix does), or
+Allow Limited users to still key Pay Rate for New / Replacement positions — in which case I'll build a narrower carve‑out that keeps that write access while blocking existing‑employee salary.
+Once you confirm, I'll apply the change and test in Dev, then share results before we promote to Production.
+
+Regards,
+Niranjan

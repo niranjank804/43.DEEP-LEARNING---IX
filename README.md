@@ -39,3 +39,15 @@ Documentation & Review
 Process documentation is created/updated.
 Product Lead review completed.
 
+Good day!
+
+Here are the requirements for the Group Insurance Allocation that once the Dev environment is ready for coding again, I would like you to take the lead on. There are parts that are the same and therefore the build for those can be together and parts that are using different data where maybe the .PRO is in one, but it notes whether the data is Cash or Accrual to do the different calculation. 
+
+Please review the attached requirements documents that have been approved by the business for information about the two items. Additionally, I created Features for each with PBIs started for the Cash Allocation. https://dev.azure.com/AIZ-Global/GT.GFS-Program/_workitems/edit/3916372/ When you open this, you can see all the PBIs in the Related Work section:  
+
+If you have questions on the process/build, please reach out. 
+
+Thanks,
+Lisa  
+
+

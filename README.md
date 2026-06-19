@@ -1,51 +1,34 @@
-Hi Lisa,
 
-I wanted to follow up on my previous email regarding the IBM Support case for our PA Cloud memory utilization issue (TS022372520).
+mgarmendiam (IBM)
+Jun 19, 2026, 13:03
+Hello Niranjan,
 
-IBM has closed the case due to inactivity while we were still gathering internal inputs. I need to reopen it and respond to their diagnostic questions — your perspective would be helpful before I do.
 
-Specifically, I'd appreciate your input on:
 
-Whether you are aware of any recent changes — data growth, hierarchy expansion, new dimensions, or version upgrades — that coincide with the memory pressure increase
-Whether you recall large view executions, dashboard activity, or rule recalculations during peak memory periods
-Any context on how the workload today compares to when the environment was performing better
-Even a quick reply or a 15-minute call would be enough to move forward. I want to make sure your team's perspective is captured before I respond to IBM.
+It was great to connect with you again and continue assisting you. 
 
-Please let me know your availability.
 
-Thanks,
-Niranjan Patra
 
-2. Reply to IBM Support to reopen case TS022372520
-Subject: Request to Reopen Case TS022372520 – PA Cloud Memory Utilization
+I’ve received your questions and will review them carefully. I will get back to you later today or by Monday, as I need additional time to research some of the points.
 
-Hello Madeleine,
 
-Thank you for the detailed recommendations in your June 10 response. I apologize for the delayed reply — we were coordinating internally before responding.
 
-We would like to request that this case be reopened so we can continue the investigation. We are still within the 30-day reopen window.
+As requested, I will keep the case open until you confirm it can be closed.
 
-Responses to your diagnostic questions:
 
-TI processes/batch loads at time of spike — Yes, the identified spike (~50 GB) was traced to a TI process containing a nested WHILE loop generating excessive iterations. This has since been corrected. Baseline memory pressure (90%+) persists outside of that event.
-Scheduled jobs/data loads — Yes, overnight batch loads run on weekdays. Memory does not fully release after these complete.
-Higher source data volume — Data volume has grown incrementally over the past year, including additional historical years retained in cubes (approximately 8 years of history).
-Recent changes — No major version upgrades recently. Some dimension hierarchy additions have been made over the past 6–12 months.
-Dimension or hierarchy changes — Yes, some hierarchies have been expanded. No new multiple-hierarchy structures introduced recently.
-Has the workload performed better in the past — Yes, memory utilization was more stable 12–18 months ago prior to data growth and hierarchy expansion.
-Large view/dashboard/rule activity during spike — Likely yes during business hours; we observe peak memory during periods of active dashboard usage and YTD/QTD view expansions as you noted.
-Database and process name — I can provide the specific process name upon request. Please advise how you'd like this shared securely.
-PA Agent Restart
 
-We are prepared to proceed with the PA Agent restart for diagnostic purposes. We propose Sunday, June 22 at 12:00 PM EST as an off-peak window. Please confirm if this works on your end and what actions are needed from our side.
+Regarding the PA Agent, it can be restarted during weekdays only due to our schedule. However, as mentioned previously, this is not necessary, as it is mainly for logging and investigation purposes and will not resolve the issue. 
 
-Open Question
 
-You mentioned that a memory increment for our PA Cloud instance may be possible — could you confirm available upgrade tiers (e.g., 768 GB, 1 TB) and the process to request this? We understand a formal sizing consultation would go through IBM Sales/Expert Labs, but any guidance you can provide on options would be appreciated.
 
-Thank you for your continued support on this case.
+If you still want it to be restarted, we can do it, while the restart would cause only minimal disruption, we can schedule it after business hours if needed.
+
+
+
+For the memory increase topic in PA Cloud, it would be best to engage IBM Sales or Expert Labs for further assistance.
+
+
 
 Best regards,
-Niranjan Patra
-[Your company/title if needed]
-Case: TS022372520 | Related: TS022197433
+
+Madeleine

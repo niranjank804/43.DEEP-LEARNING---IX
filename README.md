@@ -1,3 +1,1 @@
-Hi Vaibhav — yes, I've identified the root cause. Forecast_Allocation_2 chore (Thread 11532) is holding a write lock on the SCN cubes and has been running since ~08:39 AM. P1EP.SSIS.LOAD.COMPLETION is stuck in a wait loop because it's polling for the actuals chore to complete, which is blocked by this lock.
-
-I tried cancelling the blocked threads from PAW Monitor but it's not working — this requires infra-level intervention. Robert logs in at 5 PM and I'll loop him in immediately to force-kill the thread. Will update you as soon as it's resolved.
+Yes, the fix is to force-kill Thread 11532 from the infra side to release the lock. However since Forecast_Allocation_2 was mid-run through SCN Copy Scenario processes, there is a risk of partial data in the SCN cubes. Once Robert kills the thread and the lock clears, we'll need to verify SCN cube data and re-run the chore cleanly. Robert joins in ~30 mins and I'll get him on it right away.

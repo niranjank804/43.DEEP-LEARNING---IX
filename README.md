@@ -1,74 +1,21 @@
-Niranjan, I have put together a view for the FTE from Assurant QA… it may need to be tweaked for the Segment information, but the MDX will get you FTE counts through May. I have saved the book in the User Reports folder and named it Financial Summary Cube - FTE Counts Actual (in case we need to tweak it).
+PRODUCT BACKLOG ITEM 4066762
 
-SELECT TM1IGNORE_BADTUPLES NON EMPTY 
-   {
-      EXCEPT(
-         {
-            [Period].[Period].[202601 YTD],
-            [Period].[Period].[202602 YTD],
-            [Period].[Period].[202603 YTD],
-            [Period].[Period].[202604 YTD],
-            [Period].[Period].[202605 YTD],
-            [Period].[Period].[202606 YTD],
-            [Period].[Period].[202607 YTD],
-            [Period].[Period].[202608 YTD],
-            [Period].[Period].[202609 YTD],
-            [Period].[Period].[202610 YTD],
-            [Period].[Period].[202611 YTD],
-            [Period].[Period].[202612 YTD]
-         }, 
-         {
-            [Period].[Period].[202606 YTD], 
-            [Period].[Period].[202607 YTD], 
-            [Period].[Period].[202608 YTD], 
-            [Period].[Period].[202609 YTD], 
-            [Period].[Period].[202610 YTD], 
-            [Period].[Period].[202611 YTD], 
-            [Period].[Period].[202612 YTD]
-         }, ALL)
-   } ON 0, TM1IGNORE_BADTUPLES NON EMPTY 
-   {
-      EXCEPT(
-         {
-            DRILLDOWNMEMBER(
-               {
-                  [Center].[Center].[1:GLOBAL CENTERS]
-               }, 
-               {
-                  [Center].[Center].[1:GLOBAL CENTERS], 
-                  [Center].[Center].[1:PLANNING MGR CENTERS], 
-                  [Center].[Center].[1:MANAGERIAL CC], 
-                  [Center].[Center].[1:MANAGERIAL REPORTED], 
-                  [Center].[Center].[1:BUSN CC]
-               }, RECURSIVE)
-         }, 
-         {
-            [Center].[Center].[1:GLOBAL CENTERS], 
-            [Center].[Center].[1:PLANNING MGR CENTERS], 
-            [Center].[Center].[1:MANAGERIAL CC]
-         }, ALL)
-   } ON 1 
-FROM
-   [Financial Summary] 
-WHERE (
-   [Version].[Version].[Actual], 
-   [Financial Summary Measure].[Financial Summary Measure].[Original Amount], 
-   [Currency].[Currency].[Currency Control Total], 
-   [Account].[Account].[1:A900001^A900001-01], 
-   [Location].[Location].[Location Control Total], 
-   [Entity].[Entity].[Entity Control Total], 
-   [Product].[Product].[1:MANAGERIAL PRODUCTS], 
-   [Client].[Client].[Top:SUPERGROUPS AND REGROUPS], 
-   [Charging Center].[Charging Center].[1:GLOBAL CENTERS], 
-   [Affiliate].[Affiliate].[ALL AFFILIATES])
-
-
-
-1.Salary account number - is it A700001-01?
-Salary account is A700001-01, however that data currently doesn’t exist in the System as there is another filter to that data based on a field we do not maintain. I’m working with the OFSAA team to get that file built. 
-
-2.Amount Class for salary driver - B000 only or both?
-For the Salary data it will only be Amount Class B000 which is already filtered on the file I’m working on getting from OFSAA. The Amount Class difference when using Cash B000 versus Accrual B100 is based on the Group Insurance data we are allocating which is in account A700018-00 (first part of Section 4 of the Requirements document)
-
-3.Target cube - are we using existing Actual Allocation cube or building a new one?
-In speaking with @Sherry Pellegrini yesterday, she was thinking that the Allocation cube would likely work for the Target Cube. 
+As an EPA System Admin, I want to review and analyze the Group Insurance Allocation requirements so that I can define a clear coding approach that supports both Cash and Accrual allocation logic within the model.
+Review all available requirements and supporting documentation for Group Insurance Allocation
+Identify key allocation drivers, assumptions, and calculation rules
+Analyze differences and commonalities between Cash vs Accrual allocation logic
+Define reusable logic/components where possible to avoid duplication
+Document proposed coding approach (DIM impacted, rules vs TI usage, data flow)
+Identify required source/target cubes and DIM structures (including Period alignment)
+Outline high-level TI processes and rule structure needed for implementation
+Acceptance Criteria:
+Requirements for Group Insurance Allocation are reviewed and key rules/assumptions are documented
+Clear comparison of Cash vs Accrual allocation logic is completed with differences identified
+Coding approach is defined, including:
+DIMs impacted
+Cubes involved (source and target)
+Use of rules vs TI processes
+Reusable design approach is identified to support both Cash and Accrual scenarios
+High-level TI process flow and rule logic outline are documented
+Dependencies, risks, and open questions are identified and communicated
+Documentation is clear, structured, and sufficient for offshore resources to begin coding without rework

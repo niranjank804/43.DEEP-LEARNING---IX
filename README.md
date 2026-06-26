@@ -1,34 +1,20 @@
-Hi Lisa,
+Hi Robert,
 
-Here is a quick update on **PBI 4066762 – Group Insurance Allocation**.
+The lower environment servers have been restarted successfully and are now up and running.
 
-I have completed the design documentation for the Group Insurance Allocation solution. The work completed included:
+I opened a support case with IBM. They identified that the Admin Server had been started using an incorrect service account after the production refresh. IBM corrected the service account, and the affected TM1 servers started successfully. They also recommended adding "RestartAdminSvr=F" to the "tm1s.cfg" file to help prevent this issue in the future.
 
-* Reviewing the October 2025 manual Cash and Accrual workbooks and documenting the allocation methodology using the same three-step calculation (FTE by Segment followed by Salary by Centre).
-* Confirming all required source data:
-
-  * Group Insurance source from Actual Allocation (E01300 / C200593 / A700018-00)
-  * FTE from Financial Summary (A900001-01, Actual, YTD)
-  * Salary from Actual Allocation (A700001-01, B000)
-* Confirming the target cube is Actual Allocation (confirmed by Sherry).
-* Designing the complete TI solution, including:
-
-  * Existing Load Actuals process (no changes required)
-  * Zero Out Group Insurance process
-  * Run Group Insurance Allocation process
-  * Export Group Insurance to GFS process
-* Documenting the allocation methodology, TI processing flow, cube usage, dimension requirements, process architecture, dependencies, design decisions, and acceptance criteria mapping.
-
-All acceptance criteria for the design phase have been addressed, and the design document is ready for review.
-
-From a design perspective, **PBI 4066762 can be considered complete for this sprint**. Development will proceed in a future sprint once the following dependencies are available:
-
-* PBI 3961015 – Centre Dimension enhancements
-* PBI 3957726 – Route Control implementation
-* OFSAA Salary file (A700001-01, B000)
-
-Could you please let me know the expected delivery date for the OFSAA Salary file? This will help us plan the development and UAT activities.
+Please let me know if you notice any further issues.
 
 Thanks,
+Niranjan Patra
+Hi Jill,
 
-Niranjan
+Thank you for your assistance.
+
+The servers have started successfully, and everything appears to be working as expected now. I appreciate your help in identifying and resolving the issue with the service account and updating the configuration.
+
+Thanks again for your support.
+
+Best regards,
+Niranjan Patra

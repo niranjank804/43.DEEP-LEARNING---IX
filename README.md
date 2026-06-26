@@ -1,15 +1,34 @@
-Hi Robert,
+Hi Lisa,
 
-I wanted to let you know that I have submitted an IBM support ticket for the TM1 server issue affecting our lower environments.
+Here is a quick update on **PBI 4066762 – Group Insurance Allocation**.
 
-Ticket Number: TS022482515
+I have completed the design documentation for the Group Insurance Allocation solution. The work completed included:
 
-Issue: Assurant Dev, Assurant QA, and Assurant GFS Dev TM1 servers are automatically stopping within seconds of being started, following the production environment refresh performed today (26-Jun-2026).
+* Reviewing the October 2025 manual Cash and Accrual workbooks and documenting the allocation methodology using the same three-step calculation (FTE by Segment followed by Salary by Centre).
+* Confirming all required source data:
 
-I reviewed the available logs (tm1server.log and AgentActions.log) and found no application-level errors — the server is shutting down gracefully, which indicates this is a platform-level issue on IBM's end rather than a configuration or application problem.
+  * Group Insurance source from Actual Allocation (E01300 / C200593 / A700018-00)
+  * FTE from Financial Summary (A900001-01, Actual, YTD)
+  * Salary from Actual Allocation (A700001-01, B000)
+* Confirming the target cube is Actual Allocation (confirmed by Sherry).
+* Designing the complete TI solution, including:
 
-IBM has been asked to investigate the environment refresh and restore all three instances to a startable state.
+  * Existing Load Actuals process (no changes required)
+  * Zero Out Group Insurance process
+  * Run Group Insurance Allocation process
+  * Export Group Insurance to GFS process
+* Documenting the allocation methodology, TI processing flow, cube usage, dimension requirements, process architecture, dependencies, design decisions, and acceptance criteria mapping.
 
-I will keep you updated as IBM responds.
+All acceptance criteria for the design phase have been addressed, and the design document is ready for review.
 
-Please let me know if you need anything else from my end.
+From a design perspective, **PBI 4066762 can be considered complete for this sprint**. Development will proceed in a future sprint once the following dependencies are available:
+
+* PBI 3961015 – Centre Dimension enhancements
+* PBI 3957726 – Route Control implementation
+* OFSAA Salary file (A700001-01, B000)
+
+Could you please let me know the expected delivery date for the OFSAA Salary file? This will help us plan the development and UAT activities.
+
+Thanks,
+
+Niranjan

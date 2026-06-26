@@ -1,18 +1,15 @@
-Environment: IBM Planning Analytics Cloud
-Affected Instances: Assurant Dev, Assurant QA, Assurant GFS Dev
+Hi Robert,
 
-Issue:
-After a production environment copy was performed on 26-Jun-2026, all three lower environment TM1 servers (Assurant Dev, Assurant QA, Assurant GFS Dev) start but automatically stop within seconds. This affects all lower environments refreshed from production.
+I wanted to let you know that I have submitted an IBM support ticket for the TM1 server issue affecting our lower environments.
 
-Steps to Reproduce:
+Ticket Number: TS022482515
 
-Click Start on Assurant Dev, Assurant QA, or Assurant GFS Dev instance
-Server shows "Processing" briefly
-Server automatically changes to Stopped within seconds
-Logs Reviewed:
+Issue: Assurant Dev, Assurant QA, and Assurant GFS Dev TM1 servers are automatically stopping within seconds of being started, following the production environment refresh performed today (26-Jun-2026).
 
-tm1server.log shows a graceful shutdown sequence only - no FATAL, ERROR, or Exception messages found
-AgentActions.log confirms multiple start attempts by multiple users
-No application-level error found in startup logs across all affected instances
-Request:
-Please investigate the environment refresh and restore all three lower environment instances (Assurant Dev, Assurant QA, Assurant GFS Dev) to a startable state.
+I reviewed the available logs (tm1server.log and AgentActions.log) and found no application-level errors — the server is shutting down gracefully, which indicates this is a platform-level issue on IBM's end rather than a configuration or application problem.
+
+IBM has been asked to investigate the environment refresh and restore all three instances to a startable state.
+
+I will keep you updated as IBM responds.
+
+Please let me know if you need anything else from my end.

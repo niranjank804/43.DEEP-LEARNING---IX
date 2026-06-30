@@ -1,0 +1,19 @@
+As an EPA System Admin, I need to enhance the Center DIM by adding new attributes and building related hierarchies so that Centers can be properly excluded from FTE and Salary data and grouped by defined business segments for reporting and analysis.
+
+This includes:
+New Center attribute to flag Centers excluded for FTE and Salary data (GrpIns Excl Flag)
+Build hierarchy based on unflagged items on Center attribute GrpIns Excl Flag (GrpIns Centers)
+New Center attribute to set Centers’ segment for grouping (Segment)
+Build hierarchy based on Segment values on Center attribute Segment (Segment Centers)
+acceptance criteria:
+A new attribute GrpIns Excl Flag exists on the Center DIM
+The GrpIns Excl Flag identifies Centers excluded from FTE and Salary data
+A GrpIns Centers hierarchy exists and includes only Centers where GrpIns Excl Flag is not set
+A new attribute Segment exists on the Center DIM
+The Segment attribute stores valid segment values for grouping Centers
+A Segment Centers hierarchy exists and groups Centers based on Segment values
+Hierarchies update correctly when attribute values change
+No impact to existing Center hierarchies or EPA processes
+
+
+

@@ -1,18 +1,11 @@
-Hi Lisa,
+pbi3957726: Group Ins Alloc - Route Control (Salary vs Rate setting)
+As an EPA System Admin, I need a TI process that reads a calculation route setting stored on Entity E01300 / Center C200593 (value = Salary or Rate) so the allocation logic runs the correct calculation path without code changes.
 
-I looked into the International Benefits behavior that Agustín flagged and have completed an initial review of the rule logic.
+New cube? where would the setting be stored? New measure? 
 
-My findings so far are:
+Acceptance criteria:
+The TI process reads the setting at Entity = E01300 and Center = C200593 for the selected Period .
+Valid values are Salary and Rate.
+If the value is missing/invalid, the process defaults to Salary (current manual method) and writes a log message.
+The chosen route is written to the TI log for traceability.
 
-* The International Benefits calculation for New and Replacement employees is salary-based and references the calculated Salaries-Regular value.
-* For New employees, Salaries-Regular already incorporates the employee FTE as part of its calculation.
-* Based on my initial review, the calculation path suggests the employee FTE may be influencing the benefit calculation more than once. I am currently validating the complete dependency chain to confirm whether this is expected behavior or an issue in the rule logic.
-* For the New 002 example (15 FTE at a 32% benefit rate), the calculated result is approximately 480%, which aligns with the behavior Agustín reported.
-
-I am tracing the full calculation flow (FTE → Salary → International Benefits) to determine exactly where the multiplier is being applied and whether the salary already fully represents the required FTE scaling.
-
-Once that validation is complete, I'll provide a detailed write-up of the rule logic, dependency chain, and my recommendation before we determine the appropriate next steps.
-
-Thanks,
-
-Niranjan Patra

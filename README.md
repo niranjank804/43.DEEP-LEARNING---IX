@@ -1,7 +1,5 @@
-Hello!
+Niranjan, my apologies for the delayed response to the design document that you have put together. A few thoughts are below…
 
-1 – Last week I sent the spreadsheets the business uses for their calculations, Segments are on those spreadsheets on the Salary-FTE tab.  
-2 – Not at this time, this was something they were thinking about for the future and instead of a rebuild later, we are putting in the capability now so it’s an easy transition if/when that day comes. 
+Section 6, is it necessary to have the zero-out process separate from the allocation run process? If we are using atomic to call these processes, having them separate is more cumbersome, since we would only want to zero-out for a period if we are also going to run the calculations/allocations for that same period.
 
-Thanks,
-Lisa  
+Also, I don’t see this mentioned in the Design documentation, but I think it would be helpful to have the Salaries data and the FTE data loaded into a Helper Cube (can we use the existing Expense Helper Cube or will we need a new cube?), so that we can use the helper cube to validate the allocation amounts.  Something like the image shown below, except that for the Salary account (A700001-01) we would load the period data (May in the example), and for the FTE account (A900001-01) we would load the May period with the May YTD data. The process could then use the data from this cube to make the calculations that are being written into the Actual Allocation cube… is that doable, and does it make sense?

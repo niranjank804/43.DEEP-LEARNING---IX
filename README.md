@@ -1,5 +1,19 @@
-Niranjan, my apologies for the delayed response to the design document that you have put together. A few thoughts are below…
+Subject: Updated Design Document – PBI 4066762 Group Insurance Allocation
 
-Section 6, is it necessary to have the zero-out process separate from the allocation run process? If we are using atomic to call these processes, having them separate is more cumbersome, since we would only want to zero-out for a period if we are also going to run the calculations/allocations for that same period.
+Hi Sherry,
 
-Also, I don’t see this mentioned in the Design documentation, but I think it would be helpful to have the Salaries data and the FTE data loaded into a Helper Cube (can we use the existing Expense Helper Cube or will we need a new cube?), so that we can use the helper cube to validate the allocation amounts.  Something like the image shown below, except that for the Salary account (A700001-01) we would load the period data (May in the example), and for the FTE account (A900001-01) we would load the May period with the May YTD data. The process could then use the data from this cube to make the calculations that are being written into the Actual Allocation cube… is that doable, and does it make sense?
+Thank you for taking the time to review the design document and for your valuable feedback.
+
+I've updated the design document to incorporate your suggestions.
+
+The key changes are:
+
+ZeroOut Process: The standalone ZeroOut process has been merged into the PROLOG of the Run Group Insurance Allocation process. Since Automic always executes the zero-out and allocation together for the same period, this simplifies the workflow while still ensuring the process remains safe to re-run.
+Helper Cube: I have included a design decision stating that the use of a Helper Cube will be evaluated during the coding phase. We'll first assess whether the existing Expense Helper Cube can accommodate the Salary and FTE validation data. If not, we'll consider creating a dedicated Helper Cube. Since the allocation can currently be performed directly from the source cubes, I've treated this as a follow-on enhancement rather than part of the current design scope.
+
+I've also updated the process architecture, logic summary, acceptance criteria, and design decisions to reflect these changes.
+
+Please find the updated design document attached for your review. Let me know if you have any additional comments or if you'd like me to make any further changes before we proceed to the coding phase.
+
+Thanks,
+Niranjan Patra

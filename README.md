@@ -13,7 +13,9 @@ Verified the new members are available in the Allocation Expense Helper cube.
 Confirmed the existing Original Amount measure remains unaffected.
 No regression issues were identified during validation.
 
-Please let me know if any additional validation is required.
+Please note that this PBI only adds the new measure members. Population of the Salary and FTE measures will be addressed as part of the related implementation.
+
+Please let me know if you have any questions or would like any additional validation.
 
 Thanks,
 

@@ -1,19 +1,13 @@
-Subject: Updated Design Document – PBI 4066762 Group Insurance Allocation
+Subject: PBI 3961016 – GrpIns Entities – Attribute Mapping Required
 
-Hi Sherry,
+Hi Lisa,
 
-Thank you for taking the time to review the design document and for your valuable feedback.
+I am working on PBI 3961016 (Group Ins Alloc – New Entity Attribute and Hierarchy).
 
-I've updated the design document to incorporate your suggestions.
+As part of this PBI, I need to set the GrpIns Incl Flag = Y on the Entity members that should be included for FTE and Salary data processing.
 
-The key changes are:
+Could you please provide a list of the Entities that should be flagged? Any format works — a spreadsheet or a list in this email is fine.
 
-ZeroOut Process: The standalone ZeroOut process has been merged into the PROLOG of the Run Group Insurance Allocation process. Since Automic always executes the zero-out and allocation together for the same period, this simplifies the workflow while still ensuring the process remains safe to re-run.
-Helper Cube: I have included a design decision stating that the use of a Helper Cube will be evaluated during the coding phase. We'll first assess whether the existing Expense Helper Cube can accommodate the Salary and FTE validation data. If not, we'll consider creating a dedicated Helper Cube. Since the allocation can currently be performed directly from the source cubes, I've treated this as a follow-on enhancement rather than part of the current design scope.
+Once I receive the list I will update the attribute values in Dev and run the process for your review.
 
-I've also updated the process architecture, logic summary, acceptance criteria, and design decisions to reflect these changes.
-
-Please find the updated design document attached for your review. Let me know if you have any additional comments or if you'd like me to make any further changes before we proceed to the coding phase.
-
-Thanks,
-Niranjan Patra
+Please let me know if you have any questions.

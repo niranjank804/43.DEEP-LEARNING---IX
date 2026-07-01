@@ -1,13 +1,20 @@
-Subject: PBI 3961016 – GrpIns Entities – Attribute Mapping Required
+Subject: PBI 4091176 – Completed
 
 Hi Lisa,
 
-I am working on PBI 3961016 (Group Ins Alloc – New Entity Attribute and Hierarchy).
+I have completed the changes for PBI 4091176.
 
-As part of this PBI, I need to set the GrpIns Incl Flag = Y on the Entity members that should be included for FTE and Salary data processing.
+The Allocation Expense Helper Measure dimension has been updated to include the new Salary and FTE members.
 
-Could you please provide a list of the Entities that should be flagged? Any format works — a spreadsheet or a list in this email is fine.
+I have validated the changes, and the acceptance criteria have been met:
 
-Once I receive the list I will update the attribute values in Dev and run the process for your review.
+Added the Salary and FTE members to the Allocation Expense Helper Measure dimension.
+Verified the new members are available in the Allocation Expense Helper cube.
+Confirmed the existing Original Amount measure remains unaffected.
+No regression issues were identified during validation.
 
-Please let me know if you have any questions.
+Please let me know if any additional validation is required.
+
+Thanks,
+
+Niranjan Patra

@@ -1,22 +1,16 @@
-Subject: PBI 4091176 – Completed
+Subject: PBI 4091546 – Development Completed
 
 Hi Lisa,
 
-I have completed the changes for PBI 4091176.
+Development for PBI 4091546 (Add US Loc Flag to }ElementAttributes_Location) is complete and tested in Dev.
 
-The Allocation Expense Helper Measure dimension has been updated to include the new Salary and FTE members.
+Summary:
 
-I have validated the changes, and the acceptance criteria have been met:
-
-Added the Salary and FTE members to the Allocation Expense Helper Measure dimension.
-Verified the new members are available in the Allocation Expense Helper cube.
-Confirmed the existing Original Amount measure remains unaffected.
-No regression issues were identified during validation.
-
-Please note that this PBI only adds the new measure members. Population of the Salary and FTE measures will be addressed as part of the related implementation.
-
-Please let me know if you have any questions or would like any additional validation.
+Added a new US Loc Flag string attribute to the Location dimension.
+Updated the DIM - Location process to populate it automatically during the nightly dimension load.
+US locations (under 1:USA MGR) are set to Y; non-US locations remain blank.
+Verified existing attributes (Enabled, ID-Name, CAD Location, etc.) are unaffected.
+Testing in Dev confirms the results match the acceptance criteria. Let me know if you'd like any additional validation before this moves to QA.
 
 Thanks,
-
-Niranjan Patra
+Niranjan

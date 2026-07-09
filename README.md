@@ -1,9 +1,10 @@
 Hi,
 
-The process completed successfully on my side as well.
+Thanks for checking.
 
-Based on the recent changes for PBI 4071093, the process now only zeroes and loads periods that exist in the shared Open Periods dimension.
+The current implementation only loads periods that are present in the shared Open Periods dimension. I verified that 202606 is currently an open period, so June is eligible to be loaded.
 
-I don't have direct SQL access to verify whether June exchange rates are currently available in the table_PA_GFS_FX_Rates source table. During my Dev testing, the process completed successfully, but no source records were returned, so I was only able to validate the ZeroOut logic and process behavior.
+I don't have SQL access to verify the contents of table_PA_GFS_FX_Rates. Could someone please confirm whether June (202606) exchange rates are available in the source table? If the data exists, I'll investigate why it isn't being loaded. If there are no June records in the source, the process would complete successfully but no rates would be loaded.
 
-Could you please confirm whether June FX rates are present in the OFSAA source table? If they are, I'll investigate why they're not being loaded. If not, then the process is behaving as expected.
+Thanks,
+Niranjan

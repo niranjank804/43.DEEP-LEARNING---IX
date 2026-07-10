@@ -1,1 +1,2 @@
-Thanks for checking. If table_PA_GFS_FX_Rates is empty, that explains the behavior. The process completed successfully, but there were no source records to load for June. Once the table is populated, we can rerun the process to validate the end-to-end load.
+SELECT [from currency], [to conversion date], [conversion rate type], [conversion rate]
+FROM [FinDM_PA].[dbo].[table_PA_GFS_FX_Rates]

@@ -1,2 +1,3 @@
-SELECT [from currency], [to conversion date], [conversion rate type], [conversion rate]
-FROM [FinDM_PA].[dbo].[table_PA_GFS_FX_Rates]
+SELECT @@SERVERNAME,
+       DB_NAME(),
+       OBJECT_ID('dbo.table_PA_GFS_FX_Rates');

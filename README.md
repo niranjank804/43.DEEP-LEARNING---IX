@@ -1,6 +1,1 @@
-ASCIIOutput(
-   GETPROCESSERRORFILEDIRECTORY | 'FX_Debug.txt',
-   vSource,
-   vSourceID,
-   vSQL
-);
+"vdbddw-finance","planningsvc","SELECT [from currency], [to conversion date], [conversion rate type], [conversion rate] FROM [FinDM_PA].[dbo].[table_PA_GFS_FX_Rates] WHERE [conversion rate] IS NOT NULL AND [conversion rate type] IN ('AIZ MTD Average Rate', 'AIZ QTD Average Rate')"

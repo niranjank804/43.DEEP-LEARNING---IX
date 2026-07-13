@@ -1,15 +1,19 @@
-Hi Sherry and Robert,
+Hi Lisa,
 
-I checked the actual records read by the process from the FX source.
+PBI 3961015 has been completed in the Dev environment.
 
-All currencies have conversion rates dated 2026-06-16, and those were loaded into Jun-2026 correctly. The only exception is CAD. Its two records (MTD and QTD) are dated 2026-07-01 in the source, so the process maps them to Jul-2026. That's why CAD appears in July instead of June.
+As requested, I merged the GrpIns Centers build into the existing DIM - Center - Build Allocation Hierarchy process instead of maintaining it as a separate TI process. I also updated the GrpIns Excl Flag to use 'Y' for excluded centers.
 
-The process derives the target period directly from the "to conversion date" field, so it is loading the data exactly as provided by the source.
+I completed testing in Dev and verified the following:
 
-Sherry: Could you please confirm whether the CAD conversion date of 2026-07-01 is correct, or whether it should have been dated in June like the other currencies? If the business rule is to map rates dated on the first day of the following month back to the previous month, please confirm so we can implement the appropriate logic.
+GrpIns Centers is built successfully under Center Alloc Hiers.
+Centers C200591 and C200593 (GrpIns Excl Flag = 'Y') are correctly excluded from the GrpIns Centers hierarchy.
+The hierarchy rebuild completes successfully and can be rerun without issues.
 
-Robert: Could you also confirm which SQL Server instance and database the vdbdw-finance ODBC DSN on the Assurant GFS Dev TM1 server points to? The FX load reads 76 rows from table_PA_GFS_FX_Rates through that DSN, but when I query the same table in SSMS, I get 0 rows. I suspect my SSMS is connected to a different SQL Server, so I'd like to verify I'm looking at the same data source.
+With these changes, the acceptance criteria for PBI 3961015 have been completed.
+
+Please let me know if you would like to review the implementation or if any additional changes are required before UAT.
 
 Thanks,
 
-Niranjan Patra
+Niranjan

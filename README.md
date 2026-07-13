@@ -1,16 +1,40 @@
 Hi Sherry,
 
-The requested logic has been implemented.
+I started working on PBI 4040751 and reviewed the existing Workday load process.
 
-Any rate whose to conversion date falls between the 1st and 15th of the month is now mapped to the previous month. I implemented the logic for all currencies since it is based on the date rule rather than being CAD-specific.
+As discussed, I removed the Skip Zero Out flag from the following Transfer measures:
 
-I reran the process in Dev and verified the results:
+Transfer Center
+Transfer Location
+Transfer Out Month
+Transfer In Month
+Transfer Approval
 
-76 records processed with no skipped records.
-CAD MTD (0.712205) and QTD (0.722628) now load to Jun-2026 instead of Jul-2026.
-Other currencies continue to load correctly (for example, EUR MTD 1.16026 loads to Jun-2026).
-Jul-2026 is now empty, as expected, since the current source data belongs to the June reporting period.
-Please let me know if you'd prefer the logic restricted to CAD only. Otherwise, the changes are ready for validation.
+I then ran the Workforce Planning Input - Load from Workday process to validate the change. However, the process aborted with the following error:
+
+Cube "WFP Center Alt Location Override" Not Found
+
+I investigated further and found that the process is attempting to read from the WFP Center Alt Location Override cube using the dynamic location override logic that was added as part of PBI 3951796.
+
+To verify the issue, I checked the environments and found:
+
+The WFP Center Alt Location Override cube is not present in the current Dev environment.
+The same cube is also not present in the current Production environment.
+The WFP Override Measures dimension is also not present in the current Dev environment.
+
+I then checked the manual backup that I created while implementing PBI 3951796, and both of the following objects are available in that backup:
+
+WFP Center Alt Location Override
+WFP Override Measures
+
+Since the Workday load process depends on these objects, I'm unable to complete the validation for PBI 4040751.
+
+Could you please confirm how you would like me to proceed?
+
+Should I recreate these objects in Dev based on the original PBI 3951796 implementation?
+Or would you prefer that they be restored from the backup?
+
+Once I have your confirmation, I'll proceed with the implementation and complete the testing.
 
 Thanks,
 

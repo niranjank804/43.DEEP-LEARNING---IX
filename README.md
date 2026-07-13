@@ -1,19 +1,17 @@
-Hi Lisa,
+Hi Sherry,
 
-PBI 3961015 has been completed in the Dev environment.
+The requested logic has been implemented.
 
-As requested, I merged the GrpIns Centers build into the existing DIM - Center - Build Allocation Hierarchy process instead of maintaining it as a separate TI process. I also updated the GrpIns Excl Flag to use 'Y' for excluded centers.
+Any rate whose to conversion date falls between the 1st and 15th of the month is now mapped to the previous month. I implemented the logic for all currencies since it is based on the date rule rather than being CAD-specific.
 
-I completed testing in Dev and verified the following:
+I reran the process in Dev and verified the results:
 
-GrpIns Centers is built successfully under Center Alloc Hiers.
-Centers C200591 and C200593 (GrpIns Excl Flag = 'Y') are correctly excluded from the GrpIns Centers hierarchy.
-The hierarchy rebuild completes successfully and can be rerun without issues.
-
-With these changes, the acceptance criteria for PBI 3961015 have been completed.
-
-Please let me know if you would like to review the implementation or if any additional changes are required before UAT.
+76 records processed with no skipped records.
+CAD MTD (0.712205) and QTD (0.722628) now load to Jun-2026 instead of Jul-2026.
+Other currencies continue to load correctly (for example, EUR MTD 1.16026 loads to Jun-2026).
+Jul-2026 is now empty, as expected, since the current source data belongs to the June reporting period.
+Please let me know if you'd prefer the logic restricted to CAD only. Otherwise, the changes are ready for validation.
 
 Thanks,
 
-Niranjan
+Niranjan Patra

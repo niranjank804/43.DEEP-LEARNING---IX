@@ -1,0 +1,2 @@
+SELECT COUNT(*), STEP FROM [FinDM_PA].[dbo].[table_PA_GFS_JE_Sweep_Staging]
+WHERE RUN_ID = 'M3R1' GROUP BY STEP
